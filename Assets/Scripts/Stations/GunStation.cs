@@ -34,9 +34,9 @@ public class GunStation : MonoBehaviour, Station {
 		}
 	}
 
-	public bool doDammage(int dammageDone)
+	public bool doDamage(int damageDone)
 	{
-		health -= dammageDone;
+		health -= damageDone;
 		if (health >= 0)
 		{
 			return true;
@@ -45,6 +45,12 @@ public class GunStation : MonoBehaviour, Station {
 		{
 			return false;
 		}
+	}
+
+	public void doWork()
+	{
+		//TODO
+		return;
 	}
 
 	public Vector2 getTarget(CrewMember crewIn)

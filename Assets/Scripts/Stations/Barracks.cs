@@ -38,6 +38,11 @@ public class Barracks : MonoBehaviour, Station {
 			return false;
 		}
 	}
+
+	public void doWork()
+	{
+		return;
+	}
 	
 	public Vector2 getTarget(CrewMember crewIn)
 	{

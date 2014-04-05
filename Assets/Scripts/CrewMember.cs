@@ -36,8 +36,10 @@ public class CrewMember : MonoBehaviour {
 	/// <param name="station">Station.</param>
 	public void SetStation(Station station)
 	{
-		activeJob = station;
-		status = CrewMemberStatus.PERFORM_JOB;
+		if (activeJob != station) {
+			activeJob = station;
+			status = CrewMemberStatus.PERFORM_JOB;
+		}
 	}
 //	public Vector2 Position
 //	{ 
@@ -89,9 +91,20 @@ public class CrewMember : MonoBehaviour {
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
+			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .3f)
+			{
+				rigidbody2D.velocity = Vector2.zero;
+				rigidbody2D.angularVelocity = 0;
+				activeJob.doWork();
+			}
 			else
 			{
 				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
+			}
+			if(Random.value * 100000 + 1000 <= tired)
+			{
+				status = CrewMemberStatus.TIRED;
+				//tired = 0;
 			}
 			break;
 
