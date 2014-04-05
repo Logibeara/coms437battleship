@@ -6,7 +6,7 @@ using System.Linq;
 public class Battleship : MonoBehaviour {
 
 	private List<CrewMember> crewMembers;
-	private int numCrewMembers = 1;
+	private int numCrewMembers = 10;
 	private List<Station> stations;
 	// Use this for initialization
 	void Start () {

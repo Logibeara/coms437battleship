@@ -13,7 +13,6 @@ public class CrewMember : MonoBehaviour {
 	private float wanderCircleRadius = 1f;
 	private float wanderAngle;
 	private float velocityMax = 2f;
-	private Random rand = new Random();
 	private int tired;
 
 	//The current major goal position of the crew member (usually defined
@@ -48,28 +47,30 @@ public class CrewMember : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Vector2 targetPos; //temp variable
+
+		//float aggregateTorque = 0;
+		Vector2 aggregateForce = Vector2.zero;
+
 		//Update the intermediate target
 		switch(status)
 		{
 		case CrewMemberStatus.IDLE_WANDER:
 			if(rigidbody2D.velocity.magnitude <= velocityMax)
 			{
-				Vector2 forwardVec = 2 * (new Vector2(transform.forward.x, transform.forward.y));
+
+				//Generate wander target to follow
+				Vector2 forwardVec = 4 * (new Vector2(transform.forward.x, transform.forward.y));
 				Vector2 circlePos = new Vector2(Position.x,  Position.y) + forwardVec;
 				wanderAngle += (Random.value * 30) - 15;
+				targetPos = circlePos + 0.05f * new Vector2(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), Mathf.Sin(wanderAngle * Mathf.Deg2Rad));
 
-				Vector2 targetPos = circlePos + new Vector2(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), Mathf.Sin(wanderAngle * Mathf.Deg2Rad));
-
-				//Apply linear force
-				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
-
-				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
-				rigidbody2D.AddTorque((cross.z < 0) ? .4f : -.4f);
-
+				ApplyTowardsTarget(targetPos, ref aggregateForce);
 			}
-			if(Random.value * 100 <= tired)
+			if(Random.value * 100000 + 1000 <= tired)
 			{
 				status = CrewMemberStatus.TIRED;
+				//tired = 0;
 			}
 
 			break;
@@ -82,21 +83,38 @@ public class CrewMember : MonoBehaviour {
 			break;
 
 		case CrewMemberStatus.TIRED:
-			if(rigidbody2D.velocity.magnitude <= velocityMax)
+			targetPos = barracksScript.getTarget(this);
+
+			//If we're at the barracks
+			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .3f)
 			{
-				Vector2 targetPos = barracksScript.getTarget(this);
-				
-				//Apply linear force
-				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
-				
-				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
-				rigidbody2D.AddTorque((cross.z < 0) ? .4f : -.4f);
-				
+				tired -= (int)(Random.value * 10);
+				rigidbody2D.velocity = Vector2.zero;
+				rigidbody2D.angularVelocity = 0;
 			}
-			if(Random.value * 1000 <= tired)
+			else
 			{
-				status = CrewMemberStatus.PERFORM_JOB;
+				//Go to the barracks
+				if(rigidbody2D.velocity.magnitude <= velocityMax)
+				{
+					ApplyTowardsTarget(targetPos, ref aggregateForce);
+					
+					//Apply linear force
+					//				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
+					//				
+					//				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
+					//				rigidbody2D.AddTorque((cross.z < 0) ? .2f : -.2f);
+				}
 			}
+			if(tired <= 0)
+			{
+				status = CrewMemberStatus.IDLE_WANDER;
+			}
+//			if(Random.value * 1000 <= tired)
+//			{
+//				status = CrewMemberStatus.PERFORM_JOB;
+//				tired = 0;
+//			}
 			break;
 		}
 
@@ -104,7 +122,25 @@ public class CrewMember : MonoBehaviour {
 		{
 			rigidbody2D.velocity = rigidbody2D.velocity.normalized *  velocityMax;
 		}
+		if(rigidbody2D.angularVelocity > .01f)
+		{
+			rigidbody2D.angularVelocity = rigidbody2D.angularVelocity *  .01f;
+		}
+
+		//Apply linear force and torque
+		rigidbody2D.AddForce(aggregateForce);
+		if(aggregateForce.magnitude > .01)
+		{
+			Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
+			rigidbody2D.AddTorque((cross.z < 0) ? .5f : -.5f);
+		}
+
 		tired++;
+	}
+
+	private void ApplyTowardsTarget(Vector2 target, ref Vector2 force)
+	{
+		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;
 	}
 
 	//After updating the intermediate target, perform wall avoidance
