@@ -78,7 +78,7 @@ public class CrewMember : MonoBehaviour {
 
 				ApplyTowardsTarget(targetPos, ref aggregateForce);
 			}
-			if(Random.value * 100000 + 1000 <= tired)
+			if(Random.value * 1000000 + 1000 <= tired)
 			{
 				status = CrewMemberStatus.TIRED;
 				//tired = 0;
@@ -101,7 +101,7 @@ public class CrewMember : MonoBehaviour {
 			{
 				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
 			}
-			if(Random.value * 100000 + 1000 <= tired)
+			if(Random.value * 1000000 + 1000 <= tired)
 			{
 				status = CrewMemberStatus.TIRED;
 				//tired = 0;
