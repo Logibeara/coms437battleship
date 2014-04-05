@@ -123,7 +123,7 @@ public class CrewMember : MonoBehaviour {
 			targetPos = barracksScript.getTarget(this);
 
 			//If we're at the barracks
-			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .3f)
+			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .4f)
 			{
 				//Stop animation
 				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
@@ -148,7 +148,7 @@ public class CrewMember : MonoBehaviour {
 			}
 			if(tired <= 0)
 			{
-				status = CrewMemberStatus.IDLE_WANDER;
+				status = CrewMemberStatus.PERFORM_JOB;
 				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = true;
 			}
 //			if(Random.value * 1000 <= tired)
