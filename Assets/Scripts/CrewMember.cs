@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+enum CrewMemberStatus
+{
+	IDLE_WANDER,
+	TIRED,
+	PERFORM_JOB
+}
+
 public class CrewMember : MonoBehaviour {
 
 	private Vector2 position;
