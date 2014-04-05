@@ -26,10 +26,19 @@ public class CrewMember : MonoBehaviour {
 	private Vector2 intermediateTarget;
 
 	private CrewMemberStatus status;
-	public Station activeJob;
+	private Station activeJob;
 	public GameObject barracks;
 	public Station barracksScript;
 
+	/// <summary>
+	/// give this crew member a job
+	/// </summary>
+	/// <param name="station">Station.</param>
+	public void SetStation(Station station)
+	{
+		activeJob = station;
+		status = CrewMemberStatus.PERFORM_JOB;
+	}
 //	public Vector2 Position
 //	{ 
 //		get { return new Vector2 (transform.position.x, transform.position.y); }

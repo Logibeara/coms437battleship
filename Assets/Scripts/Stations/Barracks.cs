@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Barracks : MonoBehaviour, Station {
@@ -26,7 +26,7 @@ public class Barracks : MonoBehaviour, Station {
 		}
 	}
 	
-	public bool doDammage(int dammageDone)
+	public bool doDamage(int dammageDone)
 	{
 		health -= dammageDone;
 		if (health >= 0)
