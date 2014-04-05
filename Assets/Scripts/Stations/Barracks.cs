@@ -1,23 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-//using System.Collections.ArrayList;
 
-public class GunStation : MonoBehaviour, Station {
+public class Barracks : MonoBehaviour, Station {
+
 	private int health;
-	List<CrewMember> crewList;
-
+	
 	// Use this for initialization
 	void Start () {
 		health = 100;
-		crewList = new List<CrewMember> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
-
+	
 	public int Health{ 
 		get
 		{
@@ -28,7 +25,7 @@ public class GunStation : MonoBehaviour, Station {
 			health = value;
 		}
 	}
-
+	
 	public bool doDammage(int dammageDone)
 	{
 		health -= dammageDone;
@@ -41,24 +38,18 @@ public class GunStation : MonoBehaviour, Station {
 			return false;
 		}
 	}
-
+	
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		return this.transform.position;
 	}
-
+	
 	public void addCrew(CrewMember crewIn)
 	{
-		if (crewIn != null)
-		{
-			crewList.Add(crewIn);
-		}
+		return;
 	}
 	public void removeCrew(CrewMember crewIn)
 	{
-		if(crewList.Contains(crewIn));
-		{
-			crewList.Remove(crewIn);
-		}
+		return;
 	}
 }

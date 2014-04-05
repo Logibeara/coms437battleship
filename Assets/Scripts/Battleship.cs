@@ -6,7 +6,7 @@ using System.Linq;
 public class Battleship : MonoBehaviour {
 
 	private List<CrewMember> crewMembers;
-	private int numCrewMembers = 10;
+	private int numCrewMembers = 1;
 	private List<Station> stations;
 	// Use this for initialization
 	void Start () {
@@ -31,18 +31,15 @@ public class Battleship : MonoBehaviour {
 
 		//find all game objects htat have stations and add them to a list.
 		GameObject[] objectArr = GameObject.FindObjectsOfType(typeof(GameObject)) as GameObject[];
-		//if (objectArr != null) 
-		//{
 		foreach (GameObject obj in objectArr) 
 		{
 			Station script = obj.GetComponent (typeof(Station)) as Station;
-			if (script != null) 
+			if (script != null)
 			{
 				stations.Add (script);
 			}
 		}
-		//}
-		//Debug.Log (stations.ToString());
+		Debug.Log (stations.Count().ToString());
 	}
 	
 	// Update is called once per frame

@@ -5,7 +5,7 @@ public class CameraSetup : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log (camera.aspect.ToString());
+		//Debug.Log (camera.aspect.ToString());
 	}
 	
 	// Update is called once per frame

@@ -14,6 +14,7 @@ public class CrewMember : MonoBehaviour {
 	private float wanderAngle;
 	private float velocityMax = 2f;
 	private Random rand = new Random();
+	private int tired;
 
 	//The current major goal position of the crew member (usually defined
 	// by the CrewMemberStatus and the active job)
@@ -27,6 +28,8 @@ public class CrewMember : MonoBehaviour {
 
 	private CrewMemberStatus status;
 	private Station activeJob;
+	public GameObject barracks;
+	public Station barracksScript;
 
 //	public Vector2 Position
 //	{ 
@@ -39,6 +42,8 @@ public class CrewMember : MonoBehaviour {
 	void Start () {
 		status = CrewMemberStatus.IDLE_WANDER;
 		wanderAngle = Random.value * 360;
+		tired = 0;
+		barracksScript = barracks.GetComponent (typeof(Station)) as Station;
 	}
 	
 	// Update is called once per frame
@@ -62,13 +67,36 @@ public class CrewMember : MonoBehaviour {
 				rigidbody2D.AddTorque((cross.z < 0) ? .4f : -.4f);
 
 			}
+			if(Random.value * 100 <= tired)
+			{
+				status = CrewMemberStatus.TIRED;
+			}
 
 			break;
 
 		case CrewMemberStatus.PERFORM_JOB:
+			if(activeJob == null)
+			{
+				status = CrewMemberStatus.IDLE_WANDER;
+			}
 			break;
 
 		case CrewMemberStatus.TIRED:
+			if(rigidbody2D.velocity.magnitude <= velocityMax)
+			{
+				Vector2 targetPos = barracksScript.getTarget(this);
+				
+				//Apply linear force
+				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
+				
+				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
+				rigidbody2D.AddTorque((cross.z < 0) ? .4f : -.4f);
+				
+			}
+			if(Random.value * 1000 <= tired)
+			{
+				status = CrewMemberStatus.PERFORM_JOB;
+			}
 			break;
 		}
 
@@ -76,6 +104,7 @@ public class CrewMember : MonoBehaviour {
 		{
 			rigidbody2D.velocity = rigidbody2D.velocity.normalized *  velocityMax;
 		}
+		tired++;
 	}
 
 	//After updating the intermediate target, perform wall avoidance
