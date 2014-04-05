@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2747761920c92a045b2f3a0ece32cf02
+guid: f99256ab418b1044eb91da6e60a087fa
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -45,7 +45,7 @@ TextureImporter:
     compressionQuality: 50
   spriteSheet:
     sprites:
-    - name: BattleshipSpriteSheet_0
+    - name: Battleship_0
       rect:
         serializedVersion: 2
         x: 471
@@ -54,7 +54,7 @@ TextureImporter:
         height: 110
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: BattleshipSpriteSheet_1
+    - name: Battleship_1
       rect:
         serializedVersion: 2
         x: 485
@@ -62,8 +62,8 @@ TextureImporter:
         width: 116
         height: 134
       alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: BattleshipSpriteSheet_2
+      pivot: {x: 0, y: 0}
+    - name: Battleship_2
       rect:
         serializedVersion: 2
         x: 809
@@ -72,7 +72,7 @@ TextureImporter:
         height: 1972
       alignment: 0
       pivot: {x: 0, y: 0}
-    - name: BattleshipSpriteSheet_3
+    - name: Battleship_3
       rect:
         serializedVersion: 2
         x: 683
@@ -80,8 +80,8 @@ TextureImporter:
         width: 8
         height: 22
       alignment: 0
-      pivot: {x: .5, y: .5}
-    - name: BattleshipSpriteSheet_4
+      pivot: {x: 0, y: 0}
+    - name: Battleship_4
       rect:
         serializedVersion: 2
         x: 712
@@ -89,6 +89,6 @@ TextureImporter:
         width: 41
         height: 36
       alignment: 0
-      pivot: {x: .5, y: .5}
-  spritePackingTag: shipparts
+      pivot: {x: 0, y: 0}
+  spritePackingTag: 
   userData: 
