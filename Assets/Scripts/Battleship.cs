@@ -30,20 +30,19 @@ public class Battleship : MonoBehaviour {
 		//crewMembers.Add (Instantiate (Resources.Load ("Prefabs/CrewMember")) as CrewMember);
 
 		//find all game objects htat have stations and add them to a list.
-		GameObject[] objectArr = GameObject.FindObjectsOfType(typeof(MonoBehaviour)) as GameObject[];
-		if (objectArr != null) 
+		GameObject[] objectArr = GameObject.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+		//if (objectArr != null) 
+		//{
+		foreach (GameObject obj in objectArr) 
 		{
-			foreach (GameObject obj in objectArr) 
+			Station script = obj.GetComponent (typeof(Station)) as Station;
+			if (script != null) 
 			{
-				Station script = obj.GetComponent (typeof(Station)) as Station;
-				if (script != null) 
-				{
-					stations.Add (script);
-				}
+				stations.Add (script);
 			}
 		}
-		//stations = GameObject.FindObjectsOfType (Station) as Station[];
-		Debug.Log (stations.ToString());
+		//}
+		//Debug.Log (stations.ToString());
 	}
 	
 	// Update is called once per frame
