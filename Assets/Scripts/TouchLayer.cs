@@ -45,9 +45,13 @@ public class TouchLayer : MonoBehaviour {
 				Vector3 hitPoint = ray.GetPoint(distance);
 				print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
+				float innerCircleRadius = .5f;
+				float outerCircleRadius = 1.5f;
 
+				float forceScale = 150;
 				//Outward Force Logic
-				Collider2D[] crewMembers = Physics2D.OverlapCircleAll(hitPoint, 1);
+				Collider2D[] crewMembers = Physics2D.OverlapCircleAll(hitPoint, outerCircleRadius);
+
 				foreach(Collider2D crewMember in crewMembers)
 				{
 					Rigidbody2D rb = crewMember.rigidbody2D;
@@ -55,10 +59,20 @@ public class TouchLayer : MonoBehaviour {
 					if(rb != null)
 					{
 						Vector3 deltaPos = rb.transform.position - hitPoint;
+						float forceFactor, force;
 
-						Vector3 force = deltaPos.normalized * 1;
-
-						rb.AddForce(force);
+						//force can be out or in
+						if(deltaPos.magnitude < innerCircleRadius)
+						{
+							forceFactor = (innerCircleRadius-deltaPos.magnitude)/innerCircleRadius;
+							force = Mathf.Pow (forceFactor,3) * forceScale;
+						}
+						else
+						{
+							forceFactor = (-outerCircleRadius+deltaPos.magnitude)/outerCircleRadius;
+							force = Mathf.Pow (forceFactor,1) * forceScale;
+						}
+						rb.AddForce(force * deltaPos.normalized);
 					}
 				}
 			}

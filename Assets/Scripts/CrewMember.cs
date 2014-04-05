@@ -10,7 +10,10 @@ enum CrewMemberStatus
 
 public class CrewMember : MonoBehaviour {
 
-	//private Vector2 position;
+	private float wanderCircleRadius = 1f;
+	private float wanderAngle;
+	private float velocityMax = 2f;
+	private Random rand = new Random();
 
 	//The current major goal position of the crew member (usually defined
 	// by the CrewMemberStatus and the active job)
@@ -22,6 +25,7 @@ public class CrewMember : MonoBehaviour {
 	//  -The force applied by any Station whose sphere of influence this crew member currently occupies
 	private Vector2 intermediateTarget;
 
+	private CrewMemberStatus status;
 	private Station activeJob;
 
 //	public Vector2 Position
@@ -33,11 +37,46 @@ public class CrewMember : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//position = Vector2.zero;
+		status = CrewMemberStatus.IDLE_WANDER;
+		wanderAngle = Random.value * 360;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//switch(
+		//Update the intermediate target
+		switch(status)
+		{
+		case CrewMemberStatus.IDLE_WANDER:
+			if(rigidbody2D.velocity.magnitude <= velocityMax)
+			{
+				Vector2 forwardVec = 2 * (new Vector2(transform.forward.x, transform.forward.y));
+				Vector2 circlePos = new Vector2(Position.x,  Position.y) + forwardVec;
+				wanderAngle += (Random.value * 30) - 15;
+
+				Vector2 targetPos = circlePos + new Vector2(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), Mathf.Sin(wanderAngle * Mathf.Deg2Rad));
+
+				//Apply linear force
+				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
+
+				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
+				rigidbody2D.AddTorque((cross.z < 0) ? .4f : -.4f);
+
+			}
+
+			break;
+
+		case CrewMemberStatus.PERFORM_JOB:
+			break;
+
+		case CrewMemberStatus.TIRED:
+			break;
+		}
+
+		if(rigidbody2D.velocity.magnitude > velocityMax)
+		{
+			rigidbody2D.velocity = rigidbody2D.velocity.normalized *  velocityMax;
+		}
 	}
+
+	//After updating the intermediate target, perform wall avoidance
 }

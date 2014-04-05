@@ -27,7 +27,7 @@ public class Battleship : MonoBehaviour {
 
 		stations = new List<Station> ();
 		//For debugging, create a crew member
-		crewMembers.Add (Instantiate (Resources.Load ("Prefabs/CrewMember")) as CrewMember);
+		//crewMembers.Add (Instantiate (Resources.Load ("Prefabs/CrewMember")) as CrewMember);
 
 		//find all game objects htat have stations and add them to a list.
 		GameObject[] objectArr = GameObject.FindObjectsOfType(typeof(MonoBehaviour)) as GameObject[];
