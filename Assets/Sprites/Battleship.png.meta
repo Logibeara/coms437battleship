@@ -48,46 +48,46 @@ TextureImporter:
     - name: Battleship_0
       rect:
         serializedVersion: 2
-        x: 471
-        y: 1433
-        width: 10
-        height: 110
+        x: 509
+        y: 873
+        width: 80
+        height: 39
       alignment: 0
       pivot: {x: 0, y: 0}
     - name: Battleship_1
       rect:
         serializedVersion: 2
-        x: 485
-        y: 1321
-        width: 116
-        height: 134
+        x: 783
+        y: 72
+        width: 558
+        height: 1976
       alignment: 0
       pivot: {x: 0, y: 0}
     - name: Battleship_2
       rect:
         serializedVersion: 2
-        x: 809
-        y: 11
-        width: 256
-        height: 1972
+        x: 683
+        y: 771
+        width: 8
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
     - name: Battleship_3
       rect:
         serializedVersion: 2
-        x: 683
-        y: 1255
-        width: 8
-        height: 22
+        x: 495
+        y: 592
+        width: 230
+        height: 136
       alignment: 0
       pivot: {x: 0, y: 0}
     - name: Battleship_4
       rect:
         serializedVersion: 2
-        x: 712
-        y: 1247
-        width: 41
-        height: 36
+        x: 545
+        y: 455
+        width: 18
+        height: 112
       alignment: 0
       pivot: {x: 0, y: 0}
   spritePackingTag: 
