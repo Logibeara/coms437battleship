@@ -25,7 +25,7 @@ Temp
 *.pidb
 *.unityproj
 *.sln
-*.userprefs 
+*.userprefs
 /Library/FailedAssetImports.txt
 /Library/cache/
 /Library/previews/
