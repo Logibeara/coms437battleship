@@ -87,7 +87,7 @@ public class CrewMember : MonoBehaviour {
 			break;
 
 		case CrewMemberStatus.PERFORM_JOB:
-			if(activeJob == null)
+			/*if(activeJob == null)
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
@@ -100,7 +100,19 @@ public class CrewMember : MonoBehaviour {
 			else
 			{
 				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
+			}*/
+			bool didWork = activeJob.doWork(this.transform.position);
+			if(didWork)
+			{
+				//don't move
+				rigidbody2D.velocity = Vector2.zero;
+				rigidbody2D.angularVelocity = 0;
 			}
+			else
+			{
+				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
+			}
+
 			if(Random.value * 100000 + 1000 <= tired)
 			{
 				status = CrewMemberStatus.TIRED;

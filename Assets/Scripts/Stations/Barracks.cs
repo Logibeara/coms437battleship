@@ -14,7 +14,13 @@ public class Barracks : MonoBehaviour, Station {
 	void Update () {
 		
 	}
-	
+
+	public bool doWork(Vector2 pos)
+	{
+		//todo
+		return true;
+	}
+
 	public int Health{ 
 		get
 		{
