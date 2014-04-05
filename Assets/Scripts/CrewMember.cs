@@ -80,6 +80,10 @@ public class CrewMember : MonoBehaviour {
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
+			else
+			{
+				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
+			}
 			break;
 
 		case CrewMemberStatus.TIRED:
@@ -88,6 +92,9 @@ public class CrewMember : MonoBehaviour {
 			//If we're at the barracks
 			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .3f)
 			{
+				//Stop animation
+				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
+
 				tired -= (int)(Random.value * 10);
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
@@ -109,6 +116,7 @@ public class CrewMember : MonoBehaviour {
 			if(tired <= 0)
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
+				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = true;
 			}
 //			if(Random.value * 1000 <= tired)
 //			{
@@ -127,6 +135,11 @@ public class CrewMember : MonoBehaviour {
 			rigidbody2D.angularVelocity = rigidbody2D.angularVelocity *  .01f;
 		}
 
+		//After updating the force, perform wall avoidance
+		//Physics2D.Raycast(
+		Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.up, aggregateForce.normalized);
+
+
 		//Apply linear force and torque
 		rigidbody2D.AddForce(aggregateForce);
 		if(aggregateForce.magnitude > .01)
@@ -142,6 +155,4 @@ public class CrewMember : MonoBehaviour {
 	{
 		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;
 	}
-
-	//After updating the intermediate target, perform wall avoidance
 }
