@@ -98,28 +98,31 @@ public class CrewMember : MonoBehaviour {
 
 	public void FixedUpdate()
 	{
-		if (path == null) {
-			//We have no path to move after yet
-			return;
-		}
-		
-		if (currentWaypoint >= path.vectorPath.Count) {
-			Debug.Log ("End Of Path Reached");
-			rigidbody2D.velocity = Vector2.zero;
-			path = null;
-			return;
-		}
-		
-		//Direction to the next waypoint
-		Vector3 dir = (path.vectorPath[currentWaypoint]-transform.position).normalized;
-		dir *= speed * Time.fixedDeltaTime;
-		rigidbody2D.velocity =  new Vector2(dir.x, dir.y);
-		
-		//Check if we are close enough to the next waypoint
-		//If we are, proceed to follow the next waypoint
-		if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < .1f) {
-			currentWaypoint++;
-			return;
+		if(!Input.GetMouseButton(0))
+		{
+			if (path == null) {
+				//We have no path to move after yet
+				return;
+			}
+			
+			if (currentWaypoint >= path.vectorPath.Count) {
+				Debug.Log ("End Of Path Reached");
+				rigidbody2D.velocity = Vector2.zero;
+				path = null;
+				return;
+			}
+			
+			//Direction to the next waypoint
+			Vector3 dir = (path.vectorPath[currentWaypoint]-transform.position).normalized;
+			dir *= speed * Time.fixedDeltaTime;
+			rigidbody2D.velocity =  new Vector2(dir.x, dir.y);
+			
+			//Check if we are close enough to the next waypoint
+			//If we are, proceed to follow the next waypoint
+			if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < .1f) {
+				currentWaypoint++;
+				return;
+			}
 		}
 	}
 
@@ -130,24 +133,24 @@ public class CrewMember : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButtonDown(0))
-		{
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			
-			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
-			
-			float distance;
-			
-			print ("fire");
-			if (xyPlane.Raycast (ray, out distance)) {
-				print ("hit");
-				Vector3 hitPoint = ray.GetPoint(distance);
-				target = new Vector2(hitPoint.x, hitPoint.y);
-				
-				seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
-				pathRequested = true;
-			}
-		}
+//		if(Input.GetMouseButtonDown(0))
+//		{
+//			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+//			
+//			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
+//			
+//			float distance;
+//			
+//			print ("fire");
+//			if (xyPlane.Raycast (ray, out distance)) {
+//				print ("hit");
+//				Vector3 hitPoint = ray.GetPoint(distance);
+//				target = new Vector2(hitPoint.x, hitPoint.y);
+//				
+//				seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
+//				pathRequested = true;
+//			}
+//		}
 				Vector2 targetPos; //temp variable
 		//
 				//float aggregateTorque = 0;
@@ -177,7 +180,7 @@ public class CrewMember : MonoBehaviour {
 			break;
 //
 		case CrewMemberStatus.PERFORM_JOB:
-			/*if(activeJob == null)
+			if(activeJob == null)
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
@@ -185,7 +188,7 @@ public class CrewMember : MonoBehaviour {
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
-				activeJob.doWork();
+				activeJob.doWork(this.Position);
 			}
 			else
 			{
@@ -197,10 +200,6 @@ public class CrewMember : MonoBehaviour {
 					pathRequested = true;
 				}
 				rigidbody2D.angularVelocity = 0;
-			}
-			else
-			{
-				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
 			}
 			if(Random.value * 100000 + 1000 <= tired)
 			{
