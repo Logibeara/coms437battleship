@@ -7,6 +7,8 @@ public interface Station
 
 	Vector2 getTarget(CrewMember crewIn);
 
+	bool doDammage(int dammageDone);
+
 	void addCrew(CrewMember crewIn);
 	void removeCrew(CrewMember crewIn);
 }

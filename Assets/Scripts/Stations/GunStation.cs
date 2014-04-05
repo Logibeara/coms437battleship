@@ -4,7 +4,7 @@ using System.Collections.Generic;
 //using System.Collections.ArrayList;
 
 public class GunStation : MonoBehaviour, Station {
-	int health;
+	private int health;
 	List<CrewMember> crewList;
 
 	// Use this for initialization
@@ -26,6 +26,19 @@ public class GunStation : MonoBehaviour, Station {
 		set
 		{
 			health = value;
+		}
+	}
+
+	public bool doDammage(int dammageDone)
+	{
+		health -= dammageDone;
+		if (health >= 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
