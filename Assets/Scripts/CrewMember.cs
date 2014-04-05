@@ -9,8 +9,7 @@ enum CrewMemberStatus
 }
 
 public class CrewMember : MonoBehaviour {
-
-	private float wanderCircleRadius = 1f;
+	
 	private float wanderAngle;
 	private float velocityMax = 2f;
 	private int tired;
@@ -60,9 +59,9 @@ public class CrewMember : MonoBehaviour {
 			{
 
 				//Generate wander target to follow
-				Vector2 forwardVec = 4 * (new Vector2(transform.forward.x, transform.forward.y));
+				Vector2 forwardVec = 100 * (new Vector2(transform.forward.x, transform.forward.y));
 				Vector2 circlePos = new Vector2(Position.x,  Position.y) + forwardVec;
-				wanderAngle += (Random.value * 30) - 15;
+				wanderAngle += (Random.value * 20) - 10;
 				targetPos = circlePos + 0.05f * new Vector2(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), Mathf.Sin(wanderAngle * Mathf.Deg2Rad));
 
 				ApplyTowardsTarget(targetPos, ref aggregateForce);
@@ -136,8 +135,25 @@ public class CrewMember : MonoBehaviour {
 		}
 
 		//After updating the force, perform wall avoidance
-		//Physics2D.Raycast(
-		Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.up, aggregateForce.normalized);
+//		RaycastHit2D lefthit = Physics2D.Raycast (rigidbody2D.transform.position + rigidbody2D.transform.up * .1f - rigidbody2D.transform.right*.2f, rigidbody2D.transform.up);
+//		RaycastHit2D righthit = Physics2D.Raycast (rigidbody2D.transform.position + rigidbody2D.transform.up * .1f + rigidbody2D.transform.right*.2f, rigidbody2D.transform.up);
+//		if (Vector2.Distance(lefthit.point, rigidbody2D.transform.position) < .2
+//		    && Vector2.Distance(righthit.point, rigidbody2D.transform.position) < .4) {
+//			print ("both");
+//			ApplyTowardsTarget(-aggregateForce * .5f, ref aggregateForce);
+//			ApplyTowardsTarget(-rigidbody2D.transform.right, ref aggregateForce);
+//		}
+//		else if (Vector2.Distance(lefthit.point, rigidbody2D.transform.position) < .4) {
+//			print ("left");
+//			ApplyTowardsTarget(-aggregateForce * .5f, ref aggregateForce);
+//			ApplyTowardsTarget(rigidbody2D.transform.right, ref aggregateForce);
+//		}
+//		else if (Vector2.Distance(righthit.point, rigidbody2D.transform.position) < .4) {
+//			print ("right");
+//			ApplyTowardsTarget(-aggregateForce * .5f, ref aggregateForce);
+//			ApplyTowardsTarget(-rigidbody2D.transform.right, ref aggregateForce);
+//		}
+		
 
 
 		//Apply linear force and torque
@@ -146,6 +162,36 @@ public class CrewMember : MonoBehaviour {
 		{
 			Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
 			rigidbody2D.AddTorque((cross.z < 0) ? .5f : -.5f);
+
+//			//After updating the force, perform wall avoidance
+//			RaycastHit2D lefthit = Physics2D.Raycast (rigidbody2D.transform.position - rigidbody2D.transform.right*.08f - rigidbody2D.transform.up*.1f, rigidbody2D.transform.up - rigidbody2D.transform.right * .1f);
+//			RaycastHit2D righthit = Physics2D.Raycast (rigidbody2D.transform.position + rigidbody2D.transform.right*.08f - rigidbody2D.transform.up*.1f, rigidbody2D.transform.up + rigidbody2D.transform.right * .1f);
+//
+//			Debug.DrawRay (rigidbody2D.transform.position - rigidbody2D.transform.right*.08f - rigidbody2D.transform.up*.1f, rigidbody2D.transform.up /*- rigidbody2D.transform.right * .1f*/);
+//			Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.right*.08f - rigidbody2D.transform.up*.1f, rigidbody2D.transform.up /*+ rigidbody2D.transform.right * .1f*/);
+//
+//			if (Vector2.Distance(lefthit.point, rigidbody2D.transform.position) < .2
+//			    && Vector2.Distance(righthit.point, rigidbody2D.transform.position) < .2) {
+//				print ("both");
+//				//rigidbody2D.AddTorque(-.4f);
+//				//rigidbody2D.velocity = -1 * rigidbody2D.transform.up;
+//				//rigidbody2D.angularVelocity = -rigidbody2D.angularVelocity;
+//				//rigidbody.angularVelocity -=
+//				rigidbody2D.angularVelocity += .01f;
+//
+//			}
+//			else if (Vector2.Distance(lefthit.point, rigidbody2D.transform.position) < .2) {
+//				print ("left");
+//				//rigidbody2D.AddTorque(-.05f);
+//				rigidbody2D.angularVelocity += .01f;
+//				//rigidbody2D.velocity = 1 * rigidbody2D.transform.up;
+//			}
+//			else if (Vector2.Distance(righthit.point, rigidbody2D.transform.position) < .2) {
+//				print ("right");
+//				//rigidbody2D.AddTorque(.075f);
+//				rigidbody2D.angularVelocity -= .01f;
+//				//rigidbody2D.velocity = 1 * rigidbody2D.transform.up;
+//			}
 		}
 
 		tired++;

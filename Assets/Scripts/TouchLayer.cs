@@ -36,14 +36,9 @@ public class TouchLayer : MonoBehaviour {
 
 			float distance;
 
-			print ("fire");
 			if (xyPlane.Raycast (ray, out distance)) {
 
-
-
-				print ("hit");
 				Vector3 hitPoint = ray.GetPoint(distance);
-				print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
 				float innerCircleRadius = .5f;
 				float outerCircleRadius = 1.5f;
