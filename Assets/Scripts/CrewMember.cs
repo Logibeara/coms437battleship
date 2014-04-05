@@ -26,7 +26,7 @@ public class CrewMember : MonoBehaviour {
 	private Vector2 intermediateTarget;
 
 	private CrewMemberStatus status;
-	private Station activeJob;
+	public Station activeJob;
 	public GameObject barracks;
 	public Station barracksScript;
 

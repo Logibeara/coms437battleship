@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Collections.ArrayList;
@@ -18,6 +18,11 @@ public class GunStation : MonoBehaviour, Station {
 	
 	}
 
+	public void OnTrigger2D(Collider2D other)
+	{
+		CrewMember crewMember = other.GetComponent (typeof(CrewMember)) as CrewMember;
+		crewMember.activeJob = this;
+	}
 	public int Health{ 
 		get
 		{
