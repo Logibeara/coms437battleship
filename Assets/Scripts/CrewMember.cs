@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Pathfinding;
 
 enum CrewMemberStatus
 {
@@ -12,7 +13,7 @@ public class CrewMember : MonoBehaviour {
 
 	private float wanderCircleRadius = 1f;
 	private float wanderAngle;
-	private float velocityMax = 2f;
+	private float velocityMax = 1f;
 	private int tired;
 
 	//The current major goal position of the crew member (usually defined
@@ -30,6 +31,24 @@ public class CrewMember : MonoBehaviour {
 	public GameObject barracks;
 	public Station barracksScript;
 
+
+
+	//The calculated path
+	public Path path;
+	public bool pathRequested = false;
+	
+	//The AI's speed per second
+	public float speed = 100;
+	
+	//The max distance from the AI to a waypoint for it to continue to the next waypoint
+	public float nextWaypointDistance = .01f;
+	
+	//The waypoint we are currently moving towards
+	private int currentWaypoint = 0;
+	
+	Seeker seeker;
+	
+	
 	/// <summary>
 	/// give this crew member a job
 	/// </summary>
@@ -50,20 +69,91 @@ public class CrewMember : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+
 		status = CrewMemberStatus.IDLE_WANDER;
 		wanderAngle = Random.value * 360;
 		tired = 0;
 		barracksScript = barracks.GetComponent (typeof(Station)) as Station;
+
+		//target = barracksScript.getTarget (this);
+
+		seeker = GetComponent<Seeker> ();
+		//seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
+
+
+
+	}
+
+	public void OnPathComplete(Path p)
+	{
+				Debug.Log ("Yey, we got a path back. Did it have an error? " + p.error);
+				if (!p.error) {
+						path = p;
+						//Reset the waypoint counter
+						currentWaypoint = 0;
+				}
+		pathRequested = false;
+		}
+
+	public void FixedUpdate()
+	{
+		if (path == null) {
+			//We have no path to move after yet
+			return;
+		}
+		
+		if (currentWaypoint >= path.vectorPath.Count) {
+			Debug.Log ("End Of Path Reached");
+			rigidbody2D.velocity = Vector2.zero;
+			path = null;
+			return;
+		}
+		
+		//Direction to the next waypoint
+		Vector3 dir = (path.vectorPath[currentWaypoint]-transform.position).normalized;
+		dir *= speed * Time.fixedDeltaTime;
+		rigidbody2D.velocity =  new Vector2(dir.x, dir.y);
+		
+		//Check if we are close enough to the next waypoint
+		//If we are, proceed to follow the next waypoint
+		if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < .1f) {
+			currentWaypoint++;
+			return;
+		}
+	}
+
+	void OnMouseDown()
+	{
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector2 targetPos; //temp variable
-
-		//float aggregateTorque = 0;
-		Vector2 aggregateForce = Vector2.zero;
-
-		//Update the intermediate target
+		if(Input.GetMouseButtonDown(0))
+		{
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			
+			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
+			
+			float distance;
+			
+			print ("fire");
+			if (xyPlane.Raycast (ray, out distance)) {
+				print ("hit");
+				Vector3 hitPoint = ray.GetPoint(distance);
+				target = new Vector2(hitPoint.x, hitPoint.y);
+				
+				seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
+				pathRequested = true;
+			}
+		}
+				Vector2 targetPos; //temp variable
+		//
+				//float aggregateTorque = 0;
+				Vector2 aggregateForce = Vector2.zero;
+//
+//		//Update the intermediate target
 		switch(status)
 		{
 		case CrewMemberStatus.IDLE_WANDER:
@@ -85,13 +175,13 @@ public class CrewMember : MonoBehaviour {
 			}
 
 			break;
-
+//
 		case CrewMemberStatus.PERFORM_JOB:
 			/*if(activeJob == null)
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
-			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .3f)
+			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .6f)
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
@@ -99,13 +189,13 @@ public class CrewMember : MonoBehaviour {
 			}
 			else
 			{
-				ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
-			}*/
-			bool didWork = activeJob.doWork(this.transform.position);
-			if(didWork)
-			{
-				//don't move
-				rigidbody2D.velocity = Vector2.zero;
+				//ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
+				Vector2 t =  activeJob.getTarget(this);
+				if(path == null && pathRequested == false)
+				{
+					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
+					pathRequested = true;
+				}
 				rigidbody2D.angularVelocity = 0;
 			}
 			else
@@ -135,15 +225,11 @@ public class CrewMember : MonoBehaviour {
 			else
 			{
 				//Go to the barracks
-				if(rigidbody2D.velocity.magnitude <= velocityMax)
+				Vector2 t =  barracksScript.getTarget(this);
+				if(path == null && pathRequested == false)
 				{
-					ApplyTowardsTarget(targetPos, ref aggregateForce);
-					
-					//Apply linear force
-					//				rigidbody2D.AddForce(1 * new Vector2(targetPos.x - Position.x, targetPos.y - Position.y));
-					//				
-					//				Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
-					//				rigidbody2D.AddTorque((cross.z < 0) ? .2f : -.2f);
+					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
+					pathRequested = true;
 				}
 			}
 			if(tired <= 0)
@@ -165,22 +251,26 @@ public class CrewMember : MonoBehaviour {
 		}
 		if(rigidbody2D.angularVelocity > .01f)
 		{
-			rigidbody2D.angularVelocity = rigidbody2D.angularVelocity *  .01f;
+			rigidbody2D.angularVelocity = .01f;
+		}
+		if(rigidbody2D.angularVelocity < -.01f)
+		{
+			rigidbody2D.angularVelocity = -.01f;
 		}
 
-		//After updating the force, perform wall avoidance
-		//Physics2D.Raycast(
-		Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.up, aggregateForce.normalized);
-
-
-		//Apply linear force and torque
+//		//After updating the force, perform wall avoidance
+//		//Physics2D.Raycast(
+//		Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.up, aggregateForce.normalized);
+//
+//
+//		//Apply linear force and torque
 		rigidbody2D.AddForce(aggregateForce);
 		if(aggregateForce.magnitude > .01)
 		{
 			Vector3 cross = Vector3.Cross(new Vector3(rigidbody2D.velocity.normalized.x, rigidbody2D.velocity.normalized.y, 0), rigidbody2D.transform.up.normalized);
-			rigidbody2D.AddTorque((cross.z < 0) ? .5f : -.5f);
+			rigidbody2D.AddTorque((cross.z < 0) ? .005f : -.005f);
 		}
-
+//
 		tired++;
 	}
 
