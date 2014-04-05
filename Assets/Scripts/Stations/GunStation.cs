@@ -8,9 +8,13 @@ public class GunStation : MonoBehaviour, Station {
 	List<CrewMember> crewList;
 	private int workTick = 0;
 	private Quaternion defaultOrientation;
+	private Animator anim;					// Reference to the Animator component.
+
 	// Use this for initialization
 	void Start () {
+
 		health = 100;
+		anim = transform.root.gameObject.GetComponent<Animator> ();
 		fsm_state = FSM_State.NoTargetAvailable;
 		crewList = new List<CrewMember> ();
 		defaultOrientation = transform.localRotation;
@@ -37,11 +41,54 @@ public class GunStation : MonoBehaviour, Station {
 	private float shotsPerTick = 1;
 	private FSM_State fsm_state;
 	private int gunCharge = 0;
-	private int gunFireThreshold = 6;
+	private int gunFireThreshold = 100;
 
 	//hack for testing
 	bool enemyShipExists = true;
 
+	private void fire()
+	{
+		anim.SetTrigger ("Shoot");
+
+
+		ExplosiveRound bulletInstance1 = (
+			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
+			typeof(ExplosiveRound)) as ExplosiveRound;
+		
+		ExplosiveRound bulletInstance2 = (
+			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
+			typeof(ExplosiveRound)) as ExplosiveRound;
+		
+		
+		ExplosiveRound bulletInstance3 = (
+			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
+			typeof(ExplosiveRound)) as ExplosiveRound;
+
+		
+		Transform[] barrelPos = {
+			transform.FindChild("firelocation1"),
+			transform.FindChild("firelocation2"),
+			transform.FindChild("firelocation3")};
+
+
+
+		bulletInstance1.transform.rotation = barrelPos[0].transform.rotation* bulletInstance1.transform.rotation;
+		bulletInstance2.transform.rotation = barrelPos[1].transform.rotation* bulletInstance2.transform.rotation;
+		bulletInstance3.transform.rotation = barrelPos[2].transform.rotation* bulletInstance3.transform.rotation;
+
+		
+		bulletInstance1.transform.position = barrelPos [0].position;
+		bulletInstance2.transform.position = barrelPos [1].position;
+		bulletInstance3.transform.position = barrelPos [2].position; 
+
+		float speed = -10.0f;
+		bulletInstance1.rigidbody2D.velocity = new Vector2(speed, 0);
+		bulletInstance2.rigidbody2D.velocity = new Vector2(speed, 0);
+		bulletInstance3.rigidbody2D.velocity = new Vector2(speed, 0);
+ 
+		
+
+	}
 	private Vector3 getNearestEnemy()
 	{
 		//TODO
@@ -77,6 +124,11 @@ public class GunStation : MonoBehaviour, Station {
 		
 			transform.localRotation = Quaternion.RotateTowards(currentOrientation,rot,degreesPerTick);// * defaultOrientation;
 
+			if(Quaternion.Angle( transform.localRotation , rot ) < 1.0)
+			{
+				fsm_state = FSM_State.Firing;
+			}
+
 
 			break;
 
@@ -86,7 +138,7 @@ public class GunStation : MonoBehaviour, Station {
 			{
 				gunCharge = 0;
 
-				//FIRE!
+				fire();
 			}
 
 
