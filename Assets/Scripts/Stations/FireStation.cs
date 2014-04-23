@@ -6,6 +6,8 @@ public class FireStation : MonoBehaviour, Station {
 	private int health;
 	List<CrewMember> crewList;
 	private int workTick;
+	List<Fire> fireList;
+	public Battleship battleShip;
 
 	// Use this for initialization
 	void Start ()
@@ -13,6 +15,7 @@ public class FireStation : MonoBehaviour, Station {
 		health = 100;
 		crewList = new List<CrewMember> ();
 		workTick = 0;
+
 	}
 	
 	// Update is called once per frame
@@ -23,6 +26,11 @@ public class FireStation : MonoBehaviour, Station {
 			workTick --;
 			//DO WORK!!
 		}
+	}
+
+	public void setFireList(List<Fire> fireListIn)
+	{
+		fireList = fireListIn;
 	}
 
 	public int Health{ 
@@ -39,7 +47,20 @@ public class FireStation : MonoBehaviour, Station {
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		//TODO return location of closest fire when we have that information
-		return crewIn.rigidbody2D.transform.position;
+		Fire nearest = fireList[0];
+		float distance = Vector2.Distance (nearest.transform.position, crewIn.rigidbody2D.transform.position);
+		float checkDist;
+		foreach(Fire fire in fireList)
+		{
+			checkDist = Vector2.Distance(fire.transform.position, crewIn.rigidbody2D.transform.position);
+			if(checkDist < distance)
+			{
+				nearest = fire;
+				distance = checkDist;
+			}
+		}
+
+		return nearest.transform.position;
 	}
 	
 	public bool doDamage(int dammageDone)
@@ -60,8 +81,18 @@ public class FireStation : MonoBehaviour, Station {
 	/// <param name="position">Position.</param>
 	public bool doWork(Vector2 position) //does work based on posistion if possible
 	{
-		//TODO checi if near a fire
+		//TODO check if near a fire
 		//if so work++
+		bool ret = false;
+		foreach(Fire fire in fireList)
+		{
+			if(Vector2.Distance(fire.transform.position, position) < 0.6f && Vector2.Distance(fire.transform.position, position) > -0.6f)
+			{
+				workTick++;
+				ret = true;
+				break;
+			}
+		}
 		return true;
 	}
 
