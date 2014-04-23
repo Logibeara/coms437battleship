@@ -63,7 +63,7 @@ public class Fire : MonoBehaviour {
 			newPos.y += Random.value * .2f - .1f;
 
 			//Attempt to spawn a new fire
-			Instantiate(this.gameObject, newPos, this.transform.rotation);
+			fireList.Add(Instantiate(this.gameObject, newPos, this.transform.rotation) as Fire);
 			timeSinceLastSpread = 0;
 		}
 
