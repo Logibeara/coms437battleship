@@ -23,13 +23,18 @@ public class ExBattleship : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (mainGun1 == null || mainGun2 == null || mainGun3 == null) {
-			GameObject[] objarr = GameObject.FindGameObjectsWithTag ("MainGun") as GameObject[];
-			
-			if (objarr != null) {
-				mainGun1 = objarr [0];
-				mainGun2 = objarr [1];
-				mainGun3 = objarr [2];
-			}
+				GameObject[] objarr = GameObject.FindGameObjectsWithTag ("MainGun") as GameObject[];
+	
+				if (objarr != null && objarr.Length >= 3) {
+						mainGun1 = objarr [0];
+						mainGun2 = objarr [1];
+						mainGun3 = objarr [2];
+				}
+		} else {
+			exMainGun1.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun1.transform.eulerAngles.z, 0f);
+			exMainGun2.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun2.transform.eulerAngles.z, 0f);
+			exMainGun3.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun3.transform.eulerAngles.z, 0f);
+
 		}
 	}
 }
