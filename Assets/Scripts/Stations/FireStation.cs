@@ -21,11 +21,7 @@ public class FireStation : MonoBehaviour, Station {
 	// Update is called once per frame
 	void Update ()
 	{
-		while(workTick > 0)
-		{
-			workTick --;
-			//DO WORK!!
-		}
+
 	}
 
 	public void setFireList(List<Fire> fireListIn)
@@ -88,7 +84,7 @@ public class FireStation : MonoBehaviour, Station {
 		{
 			if(Vector2.Distance(fire.transform.position, position) < 0.6f && Vector2.Distance(fire.transform.position, position) > -0.6f)
 			{
-				workTick++;
+				fire.doWork();
 				ret = true;
 				break;
 			}
