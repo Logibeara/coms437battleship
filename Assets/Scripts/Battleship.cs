@@ -12,6 +12,19 @@ public class Battleship : MonoBehaviour {
 
 	public List<Fire> Fires {get { return fires; }}
 
+	public void ProjectileHit(Vector2 location)
+	{
+		Fire newFire = (Instantiate (Resources.Load ("Prefabs/Fire")) as GameObject).GetComponent (typeof(Fire)) as Fire;
+
+		Vector3 pos = newFire.transform.position;
+
+		pos.x = location.x;
+		pos.y = location.y;
+		pos.z = 0;
+
+		newFire.transform.position = pos;
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -45,6 +58,8 @@ public class Battleship : MonoBehaviour {
 		}
 		Debug.Log (stations.Count().ToString());
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {

@@ -6,6 +6,8 @@ public class TouchLayer : MonoBehaviour {
 	Touch touch;
 	// The string to display inside the scrollview. 2 buttons below add & clear this string.
 	string longString = "This is a long-ish string";
+
+	public Battleship battleship;
 	
 	void OnGUI () { 
 		
@@ -39,10 +41,12 @@ public class TouchLayer : MonoBehaviour {
 			print ("fire");
 			if (xyPlane.Raycast (ray, out distance)) {
 
-
-
 				print ("hit");
 				Vector3 hitPoint = ray.GetPoint(distance);
+
+				//Add fire
+				//battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
+
 				print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
 				float innerCircleRadius = .5f;
