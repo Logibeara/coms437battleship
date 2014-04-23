@@ -8,6 +8,10 @@ public class Battleship : MonoBehaviour {
 	private List<CrewMember> crewMembers;
 	private int numCrewMembers = 10;
 	private List<Station> stations;
+	private List<Fire> fires;
+
+	public List<Fire> Fires {get { return fires; }}
+
 	// Use this for initialization
 	void Start () {
 

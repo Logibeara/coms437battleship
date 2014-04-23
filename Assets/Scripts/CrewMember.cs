@@ -273,6 +273,14 @@ public class CrewMember : MonoBehaviour {
 		tired++;
 	}
 
+	public void nullifyJob()
+	{
+		status = CrewMemberStatus.IDLE_WANDER;
+		activeJob = null;
+		path = null;
+
+	}
+
 	private void ApplyTowardsTarget(Vector2 target, ref Vector2 force)
 	{
 		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;

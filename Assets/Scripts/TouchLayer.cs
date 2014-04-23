@@ -56,7 +56,7 @@ public class TouchLayer : MonoBehaviour {
 				{
 					Rigidbody2D rb = crewMember.rigidbody2D;
 
-					if(rb != null)
+					if(rb != null && rb.gameObject.GetComponent(typeof(CrewMember)) as CrewMember != null)
 					{
 						Vector3 deltaPos = rb.transform.position - hitPoint;
 						float forceFactor, force;
@@ -73,6 +73,9 @@ public class TouchLayer : MonoBehaviour {
 							force = Mathf.Pow (forceFactor,1) * forceScale;
 						}
 						rb.AddForce(force * deltaPos.normalized);
+
+						//Reset this crew member's job
+						(crewMember.gameObject.GetComponent(typeof(CrewMember)) as CrewMember).nullifyJob();
 					}
 				}
 			}

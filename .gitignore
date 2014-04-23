@@ -32,3 +32,8 @@ Temp
 /Library/ScriptAssemblies
 /obj
 /Temp
+
+# Other entries
+/*.apk
+/*.exe
+/*_Data/
