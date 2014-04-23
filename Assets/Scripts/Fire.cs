@@ -8,11 +8,26 @@ public class Fire : MonoBehaviour {
 	int workTicker;
 	List<Fire> fireList;
 
+	float timeSinceLastSpread;
+
+	public List<Fire> FireList
+	{
+		get { return fireList; }
+		set { fireList = value; }
+	}
+
+	public float Health
+	{
+		get{ return health;	}
+		set{ health = value; }
+	}
+
 	// Use this for initialization
 	void Start ()
 	{
 		health = 1000;
 		workTicker = 0;
+		timeSinceLastSpread = 0;
 	}
 	
 	// Update is called once per frame
@@ -23,22 +38,11 @@ public class Fire : MonoBehaviour {
 		{
 			destroy();
 		}
-	}
 
-	public void setFireList(IList<Fire> fireListIn)
-	{
-		fireList = fireListIn;
-	}
-
-	public int Health
-	{
-		get
+		if(timeSinceLastSpread > 5 && Random.value < 0.01f)
 		{
-			return health;
-		}
-		set
-		{
-			health = value;
+			//Attempt to spawn a new adjacent fire
+			//TODO
 		}
 	}
 
