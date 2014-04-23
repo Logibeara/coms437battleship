@@ -38,21 +38,21 @@ public class TouchLayer : MonoBehaviour {
 
 			float distance;
 
-			print ("fire");
+			//print ("fire");
 			if (xyPlane.Raycast (ray, out distance)) {
 
-				print ("hit");
+				//print ("hit");
 				Vector3 hitPoint = ray.GetPoint(distance);
 
 				//Add fire
 				//battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
 
-				print (hitPoint);
+				//print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
 				float innerCircleRadius = .5f;
 				float outerCircleRadius = 1.5f;
 
-				float forceScale = 150;
+				float forceScale = 250;
 				//Outward Force Logic
 				Collider2D[] crewMembers = Physics2D.OverlapCircleAll(hitPoint, outerCircleRadius);
 
@@ -79,7 +79,7 @@ public class TouchLayer : MonoBehaviour {
 						rb.AddForce(force * deltaPos.normalized);
 
 						//Reset this crew member's job
-						(crewMember.gameObject.GetComponent(typeof(CrewMember)) as CrewMember).nullifyJob();
+						//(crewMember.gameObject.GetComponent(typeof(CrewMember)) as CrewMember).nullifyJob();
 					}
 				}
 			}
