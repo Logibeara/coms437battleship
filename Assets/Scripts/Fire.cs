@@ -45,6 +45,13 @@ public class Fire : MonoBehaviour {
 	private void destroy()
 	{
 		//remove from the fire list on the battle ship
-		fireList.Remove (this);
+		if(fireList != null)
+		{
+			fireList.Remove (this);
+		}
+		else
+		{
+			throw new System.ArgumentNullException("fireList is null!!!!");
+		}
 	}
 }
