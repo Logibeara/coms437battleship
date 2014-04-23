@@ -36,9 +36,13 @@ public class FireStation : MonoBehaviour, Station {
 		}
 	}
 	
-	Vector2 getTarget(CrewMember crewIn);
+	public Vector2 getTarget(CrewMember crewIn)
+	{
+		//TODO return location of closest fire when we have that information
+		return crewIn.rigidbody2D.transform.position;
+	}
 	
-	bool doDamage(int dammageDone)
+	public bool doDamage(int dammageDone)
 	{
 		health -= dammageDone;
 		if (health >= 0)
@@ -54,10 +58,11 @@ public class FireStation : MonoBehaviour, Station {
 	/// return true of work was done	/// </summary>
 	/// <returns>The work.</returns>
 	/// <param name="position">Position.</param>
-	bool doWork(Vector2 position) //does work based on posistion if possible
+	public bool doWork(Vector2 position) //does work based on posistion if possible
 	{
 		//TODO checi if near a fire
 		//if so work++
+		return true;
 	}
 
 	public void addCrew(CrewMember crewIn)
