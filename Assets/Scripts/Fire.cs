@@ -42,7 +42,7 @@ public class Fire : MonoBehaviour {
 		if(timeSinceLastSpread > 5 && Random.value < 0.01f)
 		{
 			//Attempt to spawn a new adjacent fire
-			//TODO
+			//float xOffset
 		}
 	}
 
