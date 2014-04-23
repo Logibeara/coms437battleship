@@ -25,7 +25,7 @@ public class Fire : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		health = 1000;
+		health = 10;
 		workTicker = 0;
 		timeSinceLastSpread = 0;
 	}
@@ -38,7 +38,7 @@ public class Fire : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		health -= workTicker * Time.deltaTime;
+		health -= (float)workTicker * Time.deltaTime;
 		timeSinceLastSpread += Time.deltaTime;
 		if(health <= 0)
 		{
@@ -57,6 +57,8 @@ public class Fire : MonoBehaviour {
 			Instantiate(this.gameObject, newPos, this.transform.rotation);
 			timeSinceLastSpread = 0;
 		}
+
+		workTicker = 0;
 	}
 
 	private void extinguish()
