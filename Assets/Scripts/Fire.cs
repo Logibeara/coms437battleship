@@ -29,6 +29,11 @@ public class Fire : MonoBehaviour {
 		workTicker = 0;
 		timeSinceLastSpread = 0;
 	}
+
+	public void doWork()
+	{
+		workTicker++;
+	}
 	
 	// Update is called once per frame
 	void Update ()
