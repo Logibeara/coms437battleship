@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Fire : MonoBehaviour {
 
 	float health;
 	int workTicker;
+	List<Fire> fireList;
 
 	// Use this for initialization
 	void Start ()
@@ -23,6 +25,11 @@ public class Fire : MonoBehaviour {
 		}
 	}
 
+	public void setFireList(IList<Fire> fireListIn)
+	{
+		fireList = fireListIn;
+	}
+
 	public int Health
 	{
 		get
@@ -38,6 +45,6 @@ public class Fire : MonoBehaviour {
 	private void destroy()
 	{
 		//remove from the fire list on the battle ship
-
+		fireList.Remove (this);
 	}
 }
