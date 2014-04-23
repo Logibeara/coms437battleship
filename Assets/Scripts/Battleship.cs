@@ -14,14 +14,15 @@ public class Battleship : MonoBehaviour {
 
 	public void ProjectileHit(Vector2 location)
 	{
-		Fire newFire = (Instantiate (Resources.Load ("Prefabs/Fire")) as GameObject).GetComponent (typeof(Fire)) as Fire;
+		Fire newFire = (Instantiate (Resources.Load ("Prefabs/Fire")) as GameObject)
+			.GetComponent (typeof(Fire)) as Fire;
+
+		newFire.FireList = fires;
 
 		Vector3 pos = newFire.transform.position;
-
 		pos.x = location.x;
 		pos.y = location.y;
 		pos.z = 0;
-
 		newFire.transform.position = pos;
 	}
 
