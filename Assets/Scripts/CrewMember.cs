@@ -55,6 +55,7 @@ public class CrewMember : MonoBehaviour {
 	/// <param name="station">Station.</param>
 	public void SetStation(Station station)
 	{
+		nullifyJob ();
 		if (activeJob != station) {
 			activeJob = station;
 			status = CrewMemberStatus.PERFORM_JOB;
@@ -87,16 +88,16 @@ public class CrewMember : MonoBehaviour {
 
 	public void OnPathComplete(Path p)
 	{
-				Debug.Log ("Yey, we got a path back. Did it have an error? " + p.error);
-				if (!p.error) {
-						path = p;
-						//Reset the waypoint counter
-						currentWaypoint = 0;
-				}
-		pathRequested = false;
+		//Debug.Log ("Yey, we got a path back. Did it have an error? " + p.error);
+		if (!p.error) {
+				path = p;
+				//Reset the waypoint counter
+				currentWaypoint = 0;
 		}
+		pathRequested = false;
+	}
 
-	public void FixedUpdate()
+	public void PathUpdate()
 	{
 		if(!Input.GetMouseButton(0))
 		{
@@ -114,7 +115,7 @@ public class CrewMember : MonoBehaviour {
 			
 			//Direction to the next waypoint
 			Vector3 dir = (path.vectorPath[currentWaypoint]-transform.position).normalized;
-			dir *= speed * Time.fixedDeltaTime;
+			dir *= speed * Time.deltaTime;
 			rigidbody2D.velocity =  new Vector2(dir.x, dir.y);
 			
 			//Check if we are close enough to the next waypoint
@@ -126,11 +127,6 @@ public class CrewMember : MonoBehaviour {
 		}
 	}
 
-	void OnMouseDown()
-	{
-
-	}
-	
 	// Update is called once per frame
 	void Update () {
 //		if(Input.GetMouseButtonDown(0))
@@ -271,6 +267,8 @@ public class CrewMember : MonoBehaviour {
 		}
 //
 		tired++;
+
+		PathUpdate();
 	}
 
 	public void nullifyJob()
@@ -278,7 +276,6 @@ public class CrewMember : MonoBehaviour {
 		status = CrewMemberStatus.IDLE_WANDER;
 		activeJob = null;
 		path = null;
-
 	}
 
 	private void ApplyTowardsTarget(Vector2 target, ref Vector2 force)
