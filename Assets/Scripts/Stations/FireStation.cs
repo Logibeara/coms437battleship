@@ -43,20 +43,39 @@ public class FireStation : MonoBehaviour, Station {
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		//TODO return location of closest fire when we have that information
-		Fire nearest = fireList[0];
-		float distance = Vector2.Distance (nearest.transform.position, crewIn.rigidbody2D.transform.position);
-		float checkDist;
-		foreach(Fire fire in fireList)
+		if(fireList == null)
 		{
-			checkDist = Vector2.Distance(fire.transform.position, crewIn.rigidbody2D.transform.position);
-			if(checkDist < distance)
-			{
-				nearest = fire;
-				distance = checkDist;
-			}
+			fireList = battleShip.Fires;
 		}
+		if(fireList.Count > 0)
+		{
+			Fire nearest = fireList[0];
+			float distance = Vector2.Distance (nearest.transform.position, crewIn.rigidbody2D.transform.position);
+			float checkDist;
+			foreach(Fire fire in fireList)
+			{
+				checkDist = Vector2.Distance(fire.transform.position, crewIn.rigidbody2D.transform.position);
+				if(checkDist < distance)
+				{
+					nearest = fire;
+					distance = checkDist;
+				}
+			}
+			return nearest.transform.position;
+		}
+		else
+		{
+			return this.transform.position;
+		}
+	}
 
-		return nearest.transform.position;
+	public void OnTriggerEnter2D(Collider2D other)
+	{
+		if(other.GetComponent(typeof(CrewMember)) as CrewMember != null)
+		{
+			CrewMember crewMember = other.GetComponent (typeof(CrewMember)) as CrewMember;
+			crewMember.SetStation(this);
+		}
 	}
 	
 	public bool doDamage(int dammageDone)
@@ -84,7 +103,7 @@ public class FireStation : MonoBehaviour, Station {
 		{
 			if(Vector2.Distance(fire.transform.position, position) < 0.6f && Vector2.Distance(fire.transform.position, position) > -0.6f)
 			{
-				fire.doWork();
+				fire.fightFire();
 				ret = true;
 				break;
 			}

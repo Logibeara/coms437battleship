@@ -24,10 +24,13 @@ public class Battleship : MonoBehaviour {
 		pos.y = location.y;
 		pos.z = 0;
 		newFire.transform.position = pos;
+
+		fires.Add (newFire);
 	}
 
 	// Use this for initialization
 	void Start () {
+		fires = new List<Fire> ();
 
 		Vector3[] crewPos = {
 			transform.FindChild("CrewSpawner1").position,

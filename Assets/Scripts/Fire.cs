@@ -30,7 +30,7 @@ public class Fire : MonoBehaviour {
 		timeSinceLastSpread = 0;
 	}
 
-	public void doWork()
+	public void fightFire()
 	{
 		workTicker++;
 	}
@@ -41,7 +41,7 @@ public class Fire : MonoBehaviour {
 		health -= workTicker * Time.deltaTime;
 		if(health <= 0)
 		{
-			destroy();
+			extinguish();
 		}
 
 		if(timeSinceLastSpread > 5 && Random.value < 0.01f)
@@ -51,12 +51,14 @@ public class Fire : MonoBehaviour {
 		}
 	}
 
-	private void destroy()
+	private void extinguish()
 	{
 		//remove from the fire list on the battle ship
 		if(fireList != null)
 		{
 			fireList.Remove (this);
+			Destroy(this.gameObject);
+
 		}
 		else
 		{
