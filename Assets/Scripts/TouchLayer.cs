@@ -30,7 +30,22 @@ public class TouchLayer : MonoBehaviour {
 //				scrollPosition.y += touch.deltaPosition.y;
 //			}
 //		}
-		if(Input.GetMouseButton(0))
+		if(Input.GetMouseButtonDown(1)) //Right click
+		{
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			
+			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
+			
+			float distance;
+			if (xyPlane.Raycast (ray, out distance)) {
+				Vector3 hitPoint = ray.GetPoint(distance);
+				
+				//Add fire
+				battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
+			}
+		}
+
+		if(Input.GetMouseButton(0)) //Left click
 		{
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 
@@ -41,13 +56,11 @@ public class TouchLayer : MonoBehaviour {
 			//print ("fire");
 			if (xyPlane.Raycast (ray, out distance)) {
 
-				//print ("hit");
 				Vector3 hitPoint = ray.GetPoint(distance);
 
 				//Add fire
-				battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
+				//battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
 
-				//print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
 				float innerCircleRadius = .5f;
 				float outerCircleRadius = 1.5f;

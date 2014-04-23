@@ -4,11 +4,15 @@ using System.Collections.Generic;
 
 public class Fire : MonoBehaviour {
 
-	float health;
+	float currentHealth;
+	float maxHealth;
+
 	int workTicker;
 	List<Fire> fireList;
 
-	float timeSinceLastSpread;
+	private Vector3 defaultScale;
+
+	private float timeSinceLastSpread;
 
 	public List<Fire> FireList
 	{
@@ -18,16 +22,18 @@ public class Fire : MonoBehaviour {
 
 	public float Health
 	{
-		get{ return health;	}
-		set{ health = value; }
+		get{ return currentHealth;	}
+		set{ currentHealth = value; }
 	}
 
 	// Use this for initialization
 	void Start ()
 	{
-		health = 10;
+		maxHealth = 10;
+		currentHealth = maxHealth;
 		workTicker = 0;
 		timeSinceLastSpread = 0;
+		defaultScale = this.transform.localScale;
 	}
 
 	public void fightFire()
@@ -38,14 +44,17 @@ public class Fire : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		health -= (float)workTicker * Time.deltaTime;
+		currentHealth -= (float)workTicker * Time.deltaTime;
+
+		this.transform.localScale = defaultScale * currentHealth / maxHealth;
+
 		timeSinceLastSpread += Time.deltaTime;
-		if(health <= 0)
+		if(currentHealth <= 0)
 		{
 			extinguish();
 		}
 
-		if(timeSinceLastSpread > 2 && Random.value < 0.01f)
+		if(timeSinceLastSpread > 12 && Random.value < 0.0005f)
 		{
 			Vector3 newPos = this.transform.position;
 
