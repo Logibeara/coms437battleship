@@ -39,15 +39,23 @@ public class Fire : MonoBehaviour {
 	void Update ()
 	{
 		health -= workTicker * Time.deltaTime;
+		timeSinceLastSpread += Time.deltaTime;
 		if(health <= 0)
 		{
 			extinguish();
 		}
 
-		if(timeSinceLastSpread > 5 && Random.value < 0.01f)
+		if(timeSinceLastSpread > 2 && Random.value < 0.01f)
 		{
-			//Attempt to spawn a new adjacent fire
-			//float xOffset
+			Vector3 newPos = this.transform.position;
+
+			//Offset the position by a small, random amount
+			newPos.x += Random.value * .2f - .1f;
+			newPos.y += Random.value * .2f - .1f;
+
+			//Attempt to spawn a new fire
+			Instantiate(this.gameObject, newPos, this.transform.rotation);
+			timeSinceLastSpread = 0;
 		}
 	}
 
@@ -58,7 +66,6 @@ public class Fire : MonoBehaviour {
 		{
 			fireList.Remove (this);
 			Destroy(this.gameObject);
-
 		}
 		else
 		{

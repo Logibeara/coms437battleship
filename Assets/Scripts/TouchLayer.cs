@@ -45,7 +45,7 @@ public class TouchLayer : MonoBehaviour {
 				Vector3 hitPoint = ray.GetPoint(distance);
 
 				//Add fire
-				//battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
+				battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
 
 				//print (hitPoint);
 				//rigidbody.AddExplosionForce(2000f, hit.point, 8f);
