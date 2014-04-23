@@ -98,13 +98,13 @@ namespace Pathfinding {
 			/*
 			 * Equivalent to the above, but the above uses manual inlining
 			if (!Polygon.Left (tp1, tp2, p)) {
-				float f = Mathf.Clamp01 (Mathfx.NearestPointFactor (tp1, tp2, p));
+				float f = Mathf.Clamp01 (AstarMath.NearestPointFactor (tp1, tp2, p));
 				return new Vector3(tp1.x + (tp2.x-tp1.x)*f, oy, tp1.z + (tp2.z-tp1.z)*f)*Int3.PrecisionFactor;
 			} else if (!Polygon.Left (tp2, tp3, p)) {
-				float f = Mathf.Clamp01 (Mathfx.NearestPointFactor (tp2, tp3, p));
+				float f = Mathf.Clamp01 (AstarMath.NearestPointFactor (tp2, tp3, p));
 				return new Vector3(tp2.x + (tp3.x-tp2.x)*f, oy, tp2.z + (tp3.z-tp2.z)*f)*Int3.PrecisionFactor;
 			} else if (!Polygon.Left (tp3, tp1, p)) {
-				float f = Mathf.Clamp01 (Mathfx.NearestPointFactor (tp3, tp1, p));
+				float f = Mathf.Clamp01 (AstarMath.NearestPointFactor (tp3, tp1, p));
 				return new Vector3(tp3.x + (tp1.x-tp3.x)*f, oy, tp3.z + (tp1.z-tp3.z)*f)*Int3.PrecisionFactor;
 			} else {
 				return _p;
@@ -170,9 +170,9 @@ namespace Pathfinding {
 					if (pathOther == pathNode.parent) {
 						continue;
 					}
-					
+
 					uint cost = connectionCosts[i];
-					
+
 					if (flag2 || pathOther.flag2) {
 						cost = path.GetConnectionSpecialCost (this,other,cost);
 						
@@ -192,6 +192,7 @@ namespace Pathfinding {
 						
 						handler.PushNode (pathOther);
 					} else {
+
 						//If not we can test if the path from this node to the other one is a better one than the one already used
 						if (pathNode.G + cost + path.GetTraversalCost(other) < pathOther.G) {
 							

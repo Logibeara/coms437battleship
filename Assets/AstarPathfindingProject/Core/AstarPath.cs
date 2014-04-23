@@ -28,7 +28,7 @@ public class AstarPath : MonoBehaviour {
 	 */
 	public static System.Version Version {
 		get {
-			return new System.Version (3,4,0,5);
+			return new System.Version (3,4,0,6);
 		}
 	}
 	
@@ -562,10 +562,6 @@ public class AstarPath : MonoBehaviour {
 	 * \see #logPathResults PathLog
 	 */
 	private void OnGUI () {
-		
-		if (Input.GetKey ("l")) {
-			GUI.Label (new Rect (Screen.width-100,5,100,25),(1F/Time.smoothDeltaTime).ToString ("0")+" fps");
-		}
 		
 		if (logPathResults == PathLog.InGame) {
 			

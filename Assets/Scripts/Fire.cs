@@ -46,7 +46,7 @@ public class Fire : MonoBehaviour {
 	{
 		currentHealth -= (float)workTicker * Time.deltaTime;
 
-		this.transform.localScale = defaultScale * currentHealth / maxHealth;
+		this.transform.localScale = (defaultScale * .5f) * currentHealth / maxHealth + (defaultScale * .5f);
 
 		timeSinceLastSpread += Time.deltaTime;
 		if(currentHealth <= 0)
