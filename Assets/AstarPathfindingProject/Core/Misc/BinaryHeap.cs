@@ -19,8 +19,8 @@ namespace Pathfinding {
 		
 		public BinaryHeapM ( int numberOfElements ) { 
 			binaryHeap = new PathNode[numberOfElements]; 
-			numberOfItems = 2;
-		} 
+			numberOfItems = 1;
+		}
 		
 		public void Clear () {
 			numberOfItems = 1;

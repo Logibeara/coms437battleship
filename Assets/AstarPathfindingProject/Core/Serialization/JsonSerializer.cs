@@ -725,7 +725,9 @@ for every node {
 					string entryText = GetString (entry);
 					
 					JsonReader reader = new JsonReader(entryText,readerSettings);
-					reader.PopulateObject (ref graphEditors[i]);
+					GraphEditorBase graphEditor = graphEditors[i];
+					reader.PopulateObject (ref graphEditor);
+					graphEditors[i] = graphEditor;
 					break;
 				}
 			}

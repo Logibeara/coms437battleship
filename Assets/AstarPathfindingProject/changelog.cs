@@ -1,8 +1,14 @@
 /** \page changelog Changelog
 
+- 3.4.0.6
+	- Fixed an issue where serialization could on some machines sometimes cause an exception to get thrown.
+	- Fixed an issue where the recast graph would not rasterize terrains properly near the edges of it.
+	- Added PathUtilities.BFS.
+	- Added PathUtilities.GetPointsAroundPointWorld.
+
 - 3.4.0.5
-	- Misc fixes for namespace conflicts people have been having.
-		This should improve compatibility with other packages.
+	- Added offline documentation (Documentation.zip)
+	- Misc fixes for namespace conflicts people have been having. This should improve compatibility with other packages.
 		You might need to delete the AstarPathfindingProject folder and reimport the package for everything to work.
 
 - 3.4.0.4
