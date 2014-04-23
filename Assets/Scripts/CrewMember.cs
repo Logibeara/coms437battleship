@@ -15,6 +15,8 @@ public class CrewMember : MonoBehaviour {
 	private float wanderAngle;
 	private float velocityMax = 1f;
 	private int tired;
+	public float maxHealth = 1000f;
+	private float health;
 
 	//The current major goal position of the crew member (usually defined
 	// by the CrewMemberStatus and the active job)
@@ -82,7 +84,7 @@ public class CrewMember : MonoBehaviour {
 		seeker = GetComponent<Seeker> ();
 		//seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
 
-
+		health = maxHealth;
 
 	}
 
@@ -129,6 +131,7 @@ public class CrewMember : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
 //		if(Input.GetMouseButtonDown(0))
 //		{
 //			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
