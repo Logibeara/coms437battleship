@@ -16,8 +16,8 @@ public class CrewMember : MonoBehaviour {
 	private float wanderAngle;
 	private float velocityMax = 1f;
 	private int tired;
-	public float maxHealth = 20.0f;
-	private float health;
+	public float maxHealth = 10;
+	public float health;
 
 	private int dammage = 0;
 	private bool beingDammaged = false;
@@ -97,7 +97,6 @@ public class CrewMember : MonoBehaviour {
 
 		seeker = GetComponent<Seeker> ();
 		//seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
-
 		health = maxHealth;
 
 	}
