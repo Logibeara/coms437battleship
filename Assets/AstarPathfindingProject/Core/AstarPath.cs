@@ -686,7 +686,11 @@ public class AstarPath : MonoBehaviour {
 		ReturnPaths(true);
 	}
 	
-	private void PerformBlockingActions (bool force = false, bool unblockOnComplete = true) {
+	private void PerformBlockingActions (){PerformBlockingActions (false, true);}
+
+	//private void PerformBlockingActions (bool force){PerformBlockingActions (force, true);}
+	//private void PerformBlockingActions ( bool unblockOnComplete){PerformBlockingActions (false, unblockOnComplete);}
+	private void PerformBlockingActions (bool force, bool unblockOnComplete) {
 		if (pathQueue.AllReceiversBlocked) {
 			// Return all paths before starting blocking actions (these might change the graph and make returned paths invalid (at least the nodes))
 			ReturnPaths (false);
@@ -933,7 +937,7 @@ public class AstarPath : MonoBehaviour {
 		//FlushThreadSafeCallbacks();
 		BlockUntilPathQueueBlocked();
 		//Run tasks
-		PerformBlockingActions(true);
+		PerformBlockingActions(true, true);
 	}
 	
 #endregion
@@ -1853,7 +1857,7 @@ public class AstarPath : MonoBehaviour {
 		GraphModifier.TriggerEvent (GraphModifier.EventType.LatePostScan);
 		
 		//Perform any blocking actions and unblock (probably, some tasks might take a few frames)
-		PerformBlockingActions(true);
+		PerformBlockingActions(true,true);
 		
 		lastScanTime = (float)(System.DateTime.UtcNow-startTime).TotalSeconds;//Time.realtimeSinceStartup-startTime;
 		
@@ -2055,7 +2059,10 @@ AstarPath.RegisterSafeUpdate (delegate () {
 	  * This can be useful if you have a path which you want to prioritize over all others. Be careful to not overuse it though.
 	  * If too many paths are put in the front of the queue often, this can lead to normal paths having to wait a very long time before being calculated.
 	  */
-	public static void StartPath (Path p, bool pushToFront = false) {
+	public static void StartPath (Path p) {
+		StartPath (p, false);
+	}
+		public static void StartPath (Path p, bool pushToFront) {
 		
 		if (active == null) {
 			Debug.LogError ("There is no AstarPath object in the scene");

@@ -759,7 +759,10 @@ AstarPath.active.Scan();
 		
 		/** Updates position, walkability and penalty for the node.
 		 * Assumes that collision.Initialize (...) has been called before this function */
-		public virtual void UpdateNodePositionCollision (GridNode node, int x, int z, bool resetPenalty = true) {
+		public virtual void UpdateNodePositionCollision (GridNode node, int x, int z) {
+			UpdateNodePositionCollision (node, x, z, true); 
+		}
+		public virtual void UpdateNodePositionCollision (GridNode node, int x, int z, bool resetPenalty) {
 			
 			node.position = GetNodePosition ( node.NodeInGridIndex, 0 );//0;// = (Int3)matrix.MultiplyPoint3x4 (new Vector3 (x+0.5F,0,z+0.5F));
 			
