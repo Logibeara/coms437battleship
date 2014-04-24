@@ -62,18 +62,18 @@ public class ExBattleship : MonoBehaviour {
 			if(gunStation1.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect1.Burst();
-				enemyBattleship.DoDamage(1);
+				enemyBattleship.DoDamage(4);
 
 			}
 			if(gunStation2.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect2.Burst();
-				enemyBattleship.DoDamage(1);
+				enemyBattleship.DoDamage(4);
 			}
 			if(gunStation3.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect3.Burst();
-				enemyBattleship.DoDamage(1);
+				enemyBattleship.DoDamage(4);
 			}
 		}
 	}

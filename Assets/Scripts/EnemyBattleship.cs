@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EnemyBattleship : MonoBehaviour {
-	private double startingHealth = 100;
+	private double startingHealth = 500;
 	public double currentHealth;
 	// Use this for initialization
 
