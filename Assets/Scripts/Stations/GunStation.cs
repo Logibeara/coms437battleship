@@ -34,6 +34,7 @@ public class GunStation : MonoBehaviour, Station {
 	{
 		NoTargetAvailable,
 		AimingTowardsTarget,
+		Charging,
 		Firing,
 	}
 
@@ -130,6 +131,7 @@ public class GunStation : MonoBehaviour, Station {
 
 			break;
 		case(FSM_State.AimingTowardsTarget):
+		case(FSM_State.Charging):
 			Vector3 enemyPosition = getNearestEnemy();
 
 			Quaternion rot = Quaternion.FromToRotation(currentOrientation * new Vector3(0,-1,0),  enemyPosition- this.transform.position) * currentOrientation;
@@ -138,24 +140,26 @@ public class GunStation : MonoBehaviour, Station {
 
 			if(Quaternion.Angle( transform.localRotation , rot ) < 1.0)
 			{
-				fsm_state = FSM_State.Firing;
+				fsm_state = FSM_State.Charging;
 			}
 
 
-			break;
 
-		case(FSM_State.Firing):
+		
 			gunCharge ++;
 			if(gunCharge >= gunFireThreshold)
 			{
 				gunCharge = 0;
-
-				fire();
+				fsm_state = FSM_State.Firing;
+			
 			}
-
-
+			
 			break;
-
+		case(FSM_State.Firing):
+			fire();
+			
+			fsm_state = FSM_State.AimingTowardsTarget;
+			break;
 		}
 	}
 

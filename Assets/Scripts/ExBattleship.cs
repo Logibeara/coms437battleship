@@ -14,12 +14,23 @@ public class ExBattleship : MonoBehaviour {
 	private GunStation gunStation1;
 	private GunStation gunStation2;
 	private GunStation gunStation3;
+
+	private GunExplosionEffect explosionEffect1;
+	private GunExplosionEffect explosionEffect2;
+	private GunExplosionEffect explosionEffect3;
+
+
+
 	// Use this for initialization
 	void Start () {
 		//find all game objects htat have stations and add them to a list.
 		exMainGun1 = GameObject.Find("ExBattleshipExMainGun1") as GameObject;
 		exMainGun2 = GameObject.Find("ExBattleshipExMainGun2") as GameObject;
 		exMainGun3 = GameObject.Find("ExBattleshipExMainGun3") as GameObject;
+
+		explosionEffect1 = exMainGun1.GetComponent<GunExplosionEffect> ();
+		explosionEffect2 = exMainGun2.GetComponent<GunExplosionEffect> ();
+		explosionEffect3 = exMainGun3.GetComponent<GunExplosionEffect> ();
 		
 		
 	}
@@ -48,7 +59,18 @@ public class ExBattleship : MonoBehaviour {
 			exMainGun2.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun2.transform.eulerAngles.z, 0f);
 			exMainGun3.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun3.transform.eulerAngles.z, 0f);
 
-			
+			if(gunStation1.fsm_state == GunStation.FSM_State.Firing)
+			{
+				explosionEffect1.Burst();
+			}
+			if(gunStation2.fsm_state == GunStation.FSM_State.Firing)
+			{
+				explosionEffect2.Burst();
+			}
+			if(gunStation3.fsm_state == GunStation.FSM_State.Firing)
+			{
+				explosionEffect3.Burst();
+			}
 		}
 	}
 }

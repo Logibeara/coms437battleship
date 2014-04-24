@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMainGun : MonoBehaviour {
+public class GunExplosionEffect : MonoBehaviour {
 
-	private GameObject firePos1;
-	private GameObject firePos2;
-	private GameObject firePos3;
+	private Transform firePos1;
+	private Transform firePos2;
+	private Transform firePos3;
 
-	public Object particleSystem;
+	public Object partSys;
 
 	private GameObject explosion1;
 	private GameObject explosion2;
@@ -18,21 +18,22 @@ public class PlayerMainGun : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		firePos1 = GameObject.Find ("FirePos1");
-		firePos2 = GameObject.Find ("FirePos2");
-		firePos3 = GameObject.Find ("FirePos3");
+		string pname =  this.transform.parent.name;
+		firePos1 = this.transform.FindChild("FirePos1");
+		firePos2 = this.transform.FindChild("FirePos2");
+		firePos3 = this.transform.FindChild("FirePos3");
 
-		particleSystem = Resources.Load ("particle/Explosion06");
+		//partSys = Resources.Load ("particle/Explosion06");
 
 
 	}
 
-	void Burst()
+	public void Burst()
 	{
 		Quaternion fireDirection = this.transform.rotation;
-		explosion1 = Instantiate (particleSystem, firePos1.transform.position, firePos1.transform.rotation) as GameObject;
-		explosion2 = Instantiate (particleSystem, firePos2.transform.position, firePos2.transform.rotation) as GameObject;
-		explosion3 = Instantiate (particleSystem, firePos3.transform.position, firePos3.transform.rotation) as GameObject;
+		explosion1 = Instantiate (partSys, firePos1.position, firePos1.rotation) as GameObject;
+		explosion2 = Instantiate (partSys, firePos2.position, firePos2.rotation) as GameObject;
+		explosion3 = Instantiate (partSys, firePos3.position, firePos3.rotation) as GameObject;
 
 		Destroy (explosion1, 10);
 		Destroy (explosion2, 10);
