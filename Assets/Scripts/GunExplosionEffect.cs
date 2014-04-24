@@ -13,6 +13,8 @@ public class GunExplosionEffect : MonoBehaviour {
 	private GameObject explosion2;
 	private GameObject explosion3;
 
+	public AudioSource gunExplosionSound;
+
 
 	//sound
 
@@ -24,7 +26,7 @@ public class GunExplosionEffect : MonoBehaviour {
 		firePos3 = this.transform.FindChild("FirePos3");
 
 		//partSys = Resources.Load ("particle/Explosion06");
-
+		gunExplosionSound = this.GetComponent<AudioSource> ();
 
 	}
 
@@ -38,7 +40,7 @@ public class GunExplosionEffect : MonoBehaviour {
 		Destroy (explosion1, 10);
 		Destroy (explosion2, 10);
 		Destroy (explosion3, 10);
-
+		gunExplosionSound.Play ();
 	}
 	
 	// Update is called once per frame
