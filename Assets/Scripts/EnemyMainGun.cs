@@ -21,6 +21,15 @@ public class EnemyMainGun : MonoBehaviour {
 	GunExplosionEffect effect;
 	private Vector3 getNearestEnemy()
 	{
+		if (exBattleship == null) {
+			GameObject gameobj = GameObject.FindGameObjectWithTag("Battleship3d");
+			if(gameobj != null)
+			{
+				exBattleship = gameobj.GetComponent<ExBattleship>();
+			}
+			return Vector3.zero;
+
+		}
 		return exBattleship.transform.position;
 	}
 
