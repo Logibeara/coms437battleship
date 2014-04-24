@@ -310,7 +310,7 @@ public class CrewMember : MonoBehaviour {
 
 	public void doDammage()
 	{
-		if(!beingDammaged)
+		if(!beingDammaged &&(activeJob == null || !activeJob.GetType().Equals(typeof(FireStation))))
 		{
 			beingDammaged = true;
 			dammage++;
