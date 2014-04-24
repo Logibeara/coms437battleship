@@ -17,6 +17,8 @@ public class EnemyMainGun : MonoBehaviour {
 	private Quaternion tempLocalRot;
 	//hack for testing
 	bool enemyShipExists = true;
+
+	GunExplosionEffect effect;
 	private Vector3 getNearestEnemy()
 	{
 		return exBattleship.transform.position;
@@ -34,6 +36,8 @@ public class EnemyMainGun : MonoBehaviour {
 		playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 		defaultOrientation = transform.localRotation;
 		tempLocalRot = defaultOrientation;
+
+		effect = this.GetComponent<GunExplosionEffect> ();
 	}
 	
 	// Update is called once per frame
@@ -59,6 +63,7 @@ public class EnemyMainGun : MonoBehaviour {
 				playerBattleship.ProjectileHit (
 		new Vector2 (playerBattleship.transform.position.x, playerBattleship.transform.position.y));
 			fsm_state = FSM_State.AimingTowardsTarget;
+			effect.Burst();
 		} else {
 			playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 
