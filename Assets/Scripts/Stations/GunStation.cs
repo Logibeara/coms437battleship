@@ -165,7 +165,10 @@ public class GunStation : MonoBehaviour, Station {
 	public void OnTriggerEnter2D(Collider2D other)
 	{
 		CrewMember crewMember = other.GetComponent (typeof(CrewMember)) as CrewMember;
-		crewMember.SetStation(this);
+		if(crewMember != null)
+		{
+			crewMember.SetStation(this);
+		}
 	}
 	public int Health{ 
 		get

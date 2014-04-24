@@ -52,6 +52,7 @@ public class FireStation : MonoBehaviour, Station {
 			Fire nearest = fireList[0];
 			float distance = Vector2.Distance (nearest.transform.position, crewIn.rigidbody2D.transform.position);
 			float checkDist;
+			fireList.RemoveAll(item => item == null);
 			foreach(Fire fire in fireList)
 			{
 				checkDist = Vector2.Distance(fire.transform.position, crewIn.rigidbody2D.transform.position);
