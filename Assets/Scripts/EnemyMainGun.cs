@@ -21,6 +21,15 @@ public class EnemyMainGun : MonoBehaviour {
 	GunExplosionEffect effect;
 	private Vector3 getNearestEnemy()
 	{
+		if (exBattleship == null) {
+			GameObject gameobj = GameObject.FindGameObjectWithTag("Battleship3d");
+			if(gameobj != null)
+			{
+				exBattleship = gameobj.GetComponent<ExBattleship>();
+			}
+			return Vector3.zero;
+
+		}
 		return exBattleship.transform.position;
 	}
 
@@ -66,8 +75,10 @@ public class EnemyMainGun : MonoBehaviour {
 		if (playerBattleship != null) {
 				playerBattleship.ProjectileHit (
 		new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
+
 			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
+			exBattleship.DoDamage();
 		} else {
 			playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 
