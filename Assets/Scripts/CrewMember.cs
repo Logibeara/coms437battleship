@@ -20,6 +20,7 @@ public class CrewMember : MonoBehaviour {
 	private float health;
 
 	private int dammage = 0;
+	private bool beingDammaged = false;
 
 	List<CrewMember> crewList;
 
@@ -152,6 +153,7 @@ public class CrewMember : MonoBehaviour {
 			health = maxHealth;
 		}
 		dammage = 0;
+		beingDammaged = false;
 //		if(Input.GetMouseButtonDown(0))
 //		{
 //			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -296,7 +298,11 @@ public class CrewMember : MonoBehaviour {
 
 	public void doDammage()
 	{
-		dammage++;
+		if(!beingDammaged)
+		{
+			beingDammaged = true;
+			dammage++;
+		}
 	}
 
 	public void heal()
