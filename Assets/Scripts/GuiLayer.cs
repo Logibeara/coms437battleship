@@ -30,8 +30,9 @@ public class GuiLayer : MonoBehaviour {
 
 	void OnGUI () {
 
+		GUIStyle style = new GUIStyle ();
 
-		if(GUI.Button(new Rect(0,0,50,40), "Alt\nView")) {
+		if(GUI.Button(new Rect(0,0,Screen.width/8,Screen.height/8), "<size=" + Screen.width/50 + "> Alt\nView</size>")) {
 			//move camera to other scene view
 			if (camera2 == null) 
 			{
