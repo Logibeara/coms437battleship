@@ -20,7 +20,7 @@ public class ExBattleship : MonoBehaviour {
 	private GunExplosionEffect explosionEffect3;
 
 
-
+	private EnemyBattleship enemyBattleship;
 	// Use this for initialization
 	void Start () {
 		//find all game objects htat have stations and add them to a list.
@@ -32,7 +32,7 @@ public class ExBattleship : MonoBehaviour {
 		explosionEffect2 = exMainGun2.GetComponent<GunExplosionEffect> ();
 		explosionEffect3 = exMainGun3.GetComponent<GunExplosionEffect> ();
 		
-		
+		enemyBattleship = (GameObject.FindGameObjectWithTag ("EnemyBattleship") as GameObject).GetComponent<EnemyBattleship> ();
 	}
 	
 	// Update is called once per frame
@@ -62,14 +62,18 @@ public class ExBattleship : MonoBehaviour {
 			if(gunStation1.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect1.Burst();
+				enemyBattleship.DoDamage(1);
+
 			}
 			if(gunStation2.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect2.Burst();
+				enemyBattleship.DoDamage(1);
 			}
 			if(gunStation3.fsm_state == GunStation.FSM_State.Firing)
 			{
 				explosionEffect3.Burst();
+				enemyBattleship.DoDamage(1);
 			}
 		}
 	}
