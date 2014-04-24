@@ -79,12 +79,21 @@ public class GunStation : MonoBehaviour, Station {
 		
 		bulletInstance1.transform.position = barrelPos [0].position;
 		bulletInstance2.transform.position = barrelPos [1].position;
-		bulletInstance3.transform.position = barrelPos [2].position; 
+		bulletInstance3.transform.position = barrelPos [2].position;
 
-		float speed = -10.0f;
-		bulletInstance1.rigidbody2D.velocity = new Vector2(speed, 0);
-		bulletInstance2.rigidbody2D.velocity = new Vector2(speed, 0);
-		bulletInstance3.rigidbody2D.velocity = new Vector2(speed, 0);
+
+		Vector3 fwd = this.transform.localRotation * this.transform.forward;
+		float speed = 10.0f;
+		//exMainGun1.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun1.transform.eulerAngles.z, 0f);
+		Vector3 direction = getNearestEnemy () - this.transform.position;
+		direction.Normalize ();
+
+		//getenemyPosition- this.transform.position;
+
+		bulletInstance1.rigidbody2D.velocity =  speed * new Vector2(direction.x,direction.y );
+
+		bulletInstance2.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y);
+		bulletInstance3.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y );
  
 		
 

@@ -58,7 +58,10 @@ namespace Pathfinding
 		 * \returns A List<Node> containing all nodes reachable from the seed node.
 		 * For better memory management the returned list should be pooled, see Pathfinding.Util.ListPool
 		 */
-		public static List<GraphNode> GetReachableNodes (GraphNode seed, int tagMask = -1) {
+		public static List<GraphNode> GetReachableNodes (GraphNode seed) {
+			return GetReachableNodes (seed, -1);
+				}
+		public static List<GraphNode> GetReachableNodes (GraphNode seed, int tagMask) {
 			Stack<GraphNode> stack = Pathfinding.Util.StackPool<GraphNode>.Claim ();
 			List<GraphNode> list = Pathfinding.Util.ListPool<GraphNode>.Claim ();
 			
@@ -113,8 +116,10 @@ namespace Pathfinding
 		 *
 		 * \returns A List<Node> containing all nodes reachable from the seed node.
 		 * For better memory management the returned list should be pooled, see Pathfinding.Util.ListPool
-		 */
-		public static List<GraphNode> BFS (GraphNode seed, int depth, int tagMask = -1) {
+
+		  */
+		public static List<GraphNode> BFS (GraphNode seed, int depth) { return BFS (seed, depth, -1);}
+		public static List<GraphNode> BFS (GraphNode seed, int depth, int tagMask) {
 			List<GraphNode> que = Pathfinding.Util.ListPool<GraphNode>.Claim ();
 			List<GraphNode> list = Pathfinding.Util.ListPool<GraphNode>.Claim ();
 
@@ -325,7 +330,10 @@ namespace Pathfinding
 		 * 
 		 * clearanceRadius will be reduced if no valid points can be found.
 		 */
-		public static List<Vector3> GetPointsOnNodes (List<GraphNode> nodes, int count, float clearanceRadius = 0) {
+		public static List<Vector3> GetPointsOnNodes (List<GraphNode> nodes, int count) {
+			return GetPointsOnNodes (nodes, count, 0);		
+		}
+		public static List<Vector3> GetPointsOnNodes (List<GraphNode> nodes, int count, float clearanceRadius) {
 			
 			if (nodes == null) throw new System.ArgumentNullException ("nodes");
 			if (nodes.Count == 0) throw new System.ArgumentException ("no nodes passed");

@@ -130,7 +130,9 @@ namespace Pathfinding {
 		}
 		
 		/** Draws a small help box with a 'Fix' button to the right. \returns Boolean - Returns true if the button was clicked */
-		public bool FixLabel (string label, string buttonLabel = "Fix", int buttonWidth = 40) {
+		//public bool FixLabel (string label, string buttonLabel = "Fix", int buttonWidth = 40) {
+		public bool FixLabel(string label){ return FixLabel(label, "Fix", 40);}
+		public bool FixLabel (string label, string buttonLabel, int buttonWidth) {
 			bool returnValue = false;
 			GUILayout.BeginHorizontal ();
 			GUILayout.Space (14*EditorGUI.indentLevel);
