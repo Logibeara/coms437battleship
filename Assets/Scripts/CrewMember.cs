@@ -56,6 +56,8 @@ public class CrewMember : MonoBehaviour {
 	
 	Seeker seeker;
 
+	SpriteRenderer jobSpriteRenderer;
+
 	public List<CrewMember> CrewList
 	{
 		get { return crewList; }
@@ -83,7 +85,8 @@ public class CrewMember : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		jobSpriteRenderer = gameObject.GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
+		SetJobIcon ("medic");
 
 		status = CrewMemberStatus.IDLE_WANDER;
 		wanderAngle = Random.value * 360;
@@ -97,6 +100,16 @@ public class CrewMember : MonoBehaviour {
 
 		health = maxHealth;
 
+	}
+
+	private void SetJobIcon(string fileName)
+	{
+		if(fileName == null)
+		{
+			jobSpriteRenderer.sprite = null;
+			return;
+		}
+		jobSpriteRenderer.sprite = Resources.Load<Sprite>("Sprites/JobIcon/" + fileName);
 	}
 
 	public void OnPathComplete(Path p)
