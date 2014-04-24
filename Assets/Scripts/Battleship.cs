@@ -43,6 +43,7 @@ public class Battleship : MonoBehaviour {
 				Instantiate (Resources.Load ("Prefabs/CrewMember")) as GameObject).GetComponent(
 				typeof(CrewMember)) as CrewMember;
 			crewMember.Position = crewPos[i%crewPos.Length];
+			crewMember.CrewList = crewMembers;
 			crewMembers.Add(crewMember);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Pathfinding;
 
 enum CrewMemberStatus
@@ -15,8 +16,12 @@ public class CrewMember : MonoBehaviour {
 	private float wanderAngle;
 	private float velocityMax = 1f;
 	private int tired;
-	public float maxHealth = 1000f;
+	public float maxHealth = 20.0f;
 	private float health;
+
+	private int dammage = 0;
+
+	List<CrewMember> crewList;
 
 	//The current major goal position of the crew member (usually defined
 	// by the CrewMemberStatus and the active job)
@@ -49,7 +54,12 @@ public class CrewMember : MonoBehaviour {
 	private int currentWaypoint = 0;
 	
 	Seeker seeker;
-	
+
+	public List<CrewMember> CrewList
+	{
+		get { return crewList; }
+		set { crewList = value; }
+	}
 	
 	/// <summary>
 	/// give this crew member a job
@@ -131,7 +141,17 @@ public class CrewMember : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		//do dammage and see if they are dead
+		health -= (float)dammage * Time.deltaTime;
+		if(health <= 0)
+		{
+			die();
+		}
+		if(health > maxHealth)
+		{
+			health = maxHealth;
+		}
+		dammage = 0;
 //		if(Input.GetMouseButtonDown(0))
 //		{
 //			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -274,6 +294,16 @@ public class CrewMember : MonoBehaviour {
 		PathUpdate();
 	}
 
+	public void doDammage()
+	{
+		dammage++;
+	}
+
+	public void heal()
+	{
+		dammage -= 2;
+	}
+
 	public void nullifyJob()
 	{
 		status = CrewMemberStatus.IDLE_WANDER;
@@ -284,5 +314,18 @@ public class CrewMember : MonoBehaviour {
 	private void ApplyTowardsTarget(Vector2 target, ref Vector2 force)
 	{
 		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;
+	}
+
+	void die()
+	{
+		if(crewList != null)
+		{
+			crewList.Remove (this);
+			Destroy(this.gameObject);
+		}
+		else
+		{
+			throw new System.ArgumentNullException("crewList is null!!!!");
+		}
 	}
 }
