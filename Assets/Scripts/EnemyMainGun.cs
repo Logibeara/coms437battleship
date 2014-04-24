@@ -61,7 +61,7 @@ public class EnemyMainGun : MonoBehaviour {
 		//hit center for now
 		if (playerBattleship != null) {
 				playerBattleship.ProjectileHit (
-		new Vector2 (playerBattleship.transform.position.x-1, playerBattleship.transform.position.y));
+		new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
 			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
 		} else {
