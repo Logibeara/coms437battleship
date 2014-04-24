@@ -183,7 +183,7 @@ public class CrewMember : MonoBehaviour {
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
-			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .6f)
+			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .5f)
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
