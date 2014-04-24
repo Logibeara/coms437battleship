@@ -11,7 +11,9 @@ public class GuiLayer : MonoBehaviour {
 	Quaternion scene1Rotation;
 	Vector3 scene2Position;
 	Quaternion scene2Rotation;
+	EnemyBattleship enemyBattleship;
 
+	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
 	void Start () {
 		Application.LoadLevelAdditive(1);
@@ -25,14 +27,15 @@ public class GuiLayer : MonoBehaviour {
 
 		//mainCamera.transform.position = scene1Position;
 		//mainCamera.transform.rotation = scene1Rotation;
-	
+		enemyBattleship = (GameObject.FindGameObjectWithTag ("EnemyBattleship") as GameObject).GetComponent<EnemyBattleship> ();
+
 	}
 
 	void OnGUI () {
 
 		GUIStyle style = new GUIStyle ();
 
-		if(GUI.Button(new Rect(0,0,Screen.width/8,Screen.height/8), "<size=" + Screen.width/50 + "> Alt\nView</size>")) {
+		if(GUI.Button(new Rect(0,0,Screen.width/8,Screen.height/8), "<size=" + Screen.width/30 + "> Alt\nView</size>")) {
 			//move camera to other scene view
 			if (camera2 == null) 
 			{
@@ -51,6 +54,21 @@ public class GuiLayer : MonoBehaviour {
 				cameraState = 0;
 			}
 		}
+
+		if (enemyBattleship == null) {
+			enemyBattleship = (GameObject.FindGameObjectWithTag ("EnemyBattleship") as GameObject).GetComponent<EnemyBattleship> ();
+
+		}
+		//display notifcations and  in bottom left corner
+
+		GUI.Box(
+			new Rect (Screen.width * 2f/ 8, Screen.height *15f/16, Screen.width * 4f/ 8, Screen.height / 14), "<size=" + Screen.width / 30 + "> " +
+		          notification + "\n" +
+		          "Ship Health: "+ enemyBattleship.GetCurrentHealth() +
+		          "</size>"
+			);
+
+
 	}
 	// Update is called once per frame
 	void Update () {
