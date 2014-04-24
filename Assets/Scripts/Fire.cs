@@ -75,6 +75,15 @@ public class Fire : MonoBehaviour {
 		workTicker = 0;
 	}
 
+	public void OnTriggerStay2D(Collider2D other)
+	{
+		CrewMember crewMember = other.GetComponent (typeof(CrewMember)) as CrewMember;
+		if(crewMember != null)
+		{
+			crewMember.doDammage();
+		}
+	}
+
 	private void extinguish()
 	{
 		//remove from the fire list on the battle ship
