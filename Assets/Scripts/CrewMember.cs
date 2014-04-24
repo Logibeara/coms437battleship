@@ -99,7 +99,7 @@ public class CrewMember : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		jobSpriteRenderer = gameObject.GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
-		SetJobIcon ("medic");
+		SetJobIcon (null);
 
 		status = CrewMemberStatus.IDLE_WANDER;
 		wanderAngle = Random.value * 360;
