@@ -40,7 +40,7 @@ public class GunExplosionEffect : MonoBehaviour {
 		Destroy (explosion1, 10);
 		Destroy (explosion2, 10);
 		Destroy (explosion3, 10);
-		gunExplosionSound.Play ();
+		gunExplosionSound.PlayOneShot (gunExplosionSound.clip);
 	}
 	
 	// Update is called once per frame
