@@ -102,11 +102,22 @@ public class GunStation : MonoBehaviour, Station {
 		
 
 	}
+	GameObject enemy;
+	GameObject battleship3d;
+
 	private Vector3 getNearestEnemy()
 	{
-		//TODO
-		//return directly left
-		return new Vector3(-10, 0, 0);
+
+		if (enemy == null || battleship3d == null) {
+			enemy = GameObject.FindWithTag ("EnemyBattleship");
+			battleship3d = GameObject.FindWithTag ("Battleship3d");
+			return new Vector3(-10, 0, 0);
+
+		} else {
+			Vector3 pos = enemy.transform.position - battleship3d.transform.position;
+			return 10 * new Vector2(pos.x, pos.z);
+		}
+
 	}
 	void BehaviorFSMDoOne()
 	{
