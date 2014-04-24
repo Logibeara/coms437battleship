@@ -10,6 +10,10 @@ public class ExBattleship : MonoBehaviour {
 	private GameObject mainGun1;
 	private GameObject mainGun2;
 	private GameObject mainGun3;
+
+	private GunStation gunStation1;
+	private GunStation gunStation2;
+	private GunStation gunStation3;
 	// Use this for initialization
 	void Start () {
 		//find all game objects htat have stations and add them to a list.
@@ -29,7 +33,14 @@ public class ExBattleship : MonoBehaviour {
 						mainGun1 = objarr [0];
 						mainGun2 = objarr [1];
 						mainGun3 = objarr [2];
+
+					gunStation1 = mainGun1.GetComponent<GunStation>();
+					gunStation2 = mainGun2.GetComponent<GunStation>();
+					gunStation3 = mainGun3.GetComponent<GunStation>();
+
 				}
+
+				
 		} else {
 
 
@@ -37,6 +48,7 @@ public class ExBattleship : MonoBehaviour {
 			exMainGun2.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun2.transform.eulerAngles.z, 0f);
 			exMainGun3.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun3.transform.eulerAngles.z, 0f);
 
+			
 		}
 	}
 }

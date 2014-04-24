@@ -30,7 +30,7 @@ public class GunStation : MonoBehaviour, Station {
 			BehaviorFSMDoOne();
 		}
 	}
-	private enum FSM_State
+	public enum FSM_State
 	{
 		NoTargetAvailable,
 		AimingTowardsTarget,
@@ -39,7 +39,7 @@ public class GunStation : MonoBehaviour, Station {
 
 	private float degreesPerTick = 1;
 	private float shotsPerTick = 1;
-	private FSM_State fsm_state;
+	public FSM_State fsm_state;
 	private int gunCharge = 0;
 	private int gunFireThreshold = 100;
 
@@ -95,6 +95,9 @@ public class GunStation : MonoBehaviour, Station {
 		bulletInstance2.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y);
 		bulletInstance3.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y );
  
+		Destroy (bulletInstance1, 10);
+		Destroy (bulletInstance2, 10);
+		Destroy (bulletInstance3, 10);
 		
 
 	}
