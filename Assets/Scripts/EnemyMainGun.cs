@@ -66,8 +66,10 @@ public class EnemyMainGun : MonoBehaviour {
 		if (playerBattleship != null) {
 				playerBattleship.ProjectileHit (
 		new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
+
 			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
+			exBattleship.DoDamage();
 		} else {
 			playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 
