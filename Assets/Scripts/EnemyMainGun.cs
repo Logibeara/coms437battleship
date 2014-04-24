@@ -33,11 +33,15 @@ public class EnemyMainGun : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
-		playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 		defaultOrientation = transform.localRotation;
 		tempLocalRot = defaultOrientation;
 
 		effect = this.GetComponent<GunExplosionEffect> ();
+	}
+
+	void Awake()
+	{
+		playerBattleship = (GameObject.FindWithTag ("PlayerBattleship") as GameObject).GetComponent(typeof(Battleship)) as Battleship;
 	}
 	
 	// Update is called once per frame

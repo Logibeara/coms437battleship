@@ -27,8 +27,12 @@ public class GuiLayer : MonoBehaviour {
 
 		//mainCamera.transform.position = scene1Position;
 		//mainCamera.transform.rotation = scene1Rotation;
-		enemyBattleship = (GameObject.FindGameObjectWithTag ("EnemyBattleship") as GameObject).GetComponent<EnemyBattleship> ();
+	}
 
+	void Awake()
+	{
+		//GameObject gobj = (GameObject.FindWithTag ("EnemyBattleship") as GameObject);
+		//enemyBattleship = gobj.GetComponent (typeof(EnemyBattleship)) as EnemyBattleship;
 	}
 
 	void OnGUI () {
