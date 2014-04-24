@@ -74,6 +74,19 @@ public class CrewMember : MonoBehaviour {
 		if (activeJob != station) {
 			activeJob = station;
 			status = CrewMemberStatus.PERFORM_JOB;
+
+			if(station is FireStation)
+			{
+				SetJobIcon ("firefighter");
+			}
+			else if(station is GunStation)
+			{
+				SetJobIcon("gunner");
+			}
+//			else if(station is MedicStation)
+//			{
+//				SetJobIcon("medic");
+//			}
 		}
 	}
 //	public Vector2 Position
@@ -242,6 +255,7 @@ public class CrewMember : MonoBehaviour {
 			break;
 
 		case CrewMemberStatus.TIRED:
+			SetJobIcon("tired");
 			targetPos = barracksScript.getTarget(this);
 
 			//If we're at the barracks
