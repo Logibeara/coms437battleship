@@ -13,6 +13,15 @@ public class GuiLayer : MonoBehaviour {
 	Quaternion scene2Rotation;
 	EnemyBattleship enemyBattleship;
 
+
+	//Progress bar data
+	float progress = 0;
+	Vector2 pos  = new Vector2(Screen.width * (1f-1f/32), 0f);
+	Vector2 size = new Vector2(Screen.width * 1f/32, Screen.height);
+	public Texture2D progressBarEmpty;
+	public Texture2D progressBarFull;
+
+
 	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
 	void Start () {
@@ -73,9 +82,13 @@ public class GuiLayer : MonoBehaviour {
 			);
 
 
+		//progress bar
+		GUI.DrawTexture(new Rect(pos.x, pos.y, size.x, size.y), progressBarEmpty);
+		GUI.DrawTexture(new Rect(pos.x, size.y*(1-Mathf.Clamp01(progress)), size.x , size.y*Mathf.Clamp01(progress)), progressBarFull);
+
 	}
 	// Update is called once per frame
 	void Update () {
-	
+		progress = Time.time * 0.05f;
 	}
 }
