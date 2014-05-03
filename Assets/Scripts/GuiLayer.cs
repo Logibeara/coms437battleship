@@ -20,7 +20,7 @@ public class GuiLayer : MonoBehaviour {
 	Vector2 size = new Vector2(Screen.width * 1f/32, Screen.height);
 	public Texture2D progressBarEmpty;
 	public Texture2D progressBarFull;
-
+	bool fightingEnemyShip = true;
 
 	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
@@ -73,13 +73,22 @@ public class GuiLayer : MonoBehaviour {
 
 		}
 		//display notifcations and  in bottom left corner
+		if (fightingEnemyShip) {
 
-		GUI.Box(
-			new Rect (Screen.width * 2f/ 8, Screen.height *15f/16, Screen.width * 4f/ 8, Screen.height / 14), "<size=" + Screen.width / 30 + "> " +
-		          notification + "\n" +
-		          "Ship Health: "+ enemyBattleship.GetCurrentHealth() +
-		          "</size>"
-			);
+				GUI.Box (
+		new Rect (Screen.width * 1f / 8, Screen.height * 15f / 16, Screen.width * 6f / 8, Screen.height / 14), "<size=" + Screen.width / 30 + "> " +
+						notification + "\n" +
+						"Ship Health: " + enemyBattleship.GetCurrentHealth () +
+						"</size>"
+				);
+		} else {
+
+				GUI.Box (
+			new Rect (Screen.width * 1f / 8, Screen.height * 15f / 16, Screen.width * 6f / 8, Screen.height / 14), "<size=" + Screen.width / 30 + "> " +
+						notification +
+						"</size>"
+				);
+		}
 
 
 		//progress bar
@@ -90,5 +99,14 @@ public class GuiLayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		progress = Time.time * 0.05f;
+
+		if (enemyBattleship != null)
+		{
+			if(enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive)
+			{
+				notification = "Enemy Ship has been defeated!";
+				fightingEnemyShip = false;
+			}
+		}
 	}
 }

@@ -9,6 +9,7 @@ public class GunStation : MonoBehaviour, Station {
 	private int workTick = 0;
 	private Quaternion defaultOrientation;
 	private Animator anim;					// Reference to the Animator component.
+	public int shootSemaphore = 0; //counter to synchronize shots with 3d representation
 
 	// Use this for initialization
 	void Start () {
@@ -21,7 +22,7 @@ public class GunStation : MonoBehaviour, Station {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 	
 		//consume all available work ticks
 		while(workTick > 0)
@@ -96,10 +97,10 @@ public class GunStation : MonoBehaviour, Station {
 		bulletInstance2.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y);
 		bulletInstance3.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y );
  
-		Destroy (bulletInstance1, 10);
-		Destroy (bulletInstance2, 10);
-		Destroy (bulletInstance3, 10);
-		
+		Destroy (bulletInstance1, 2);
+		Destroy (bulletInstance2, 2);
+		Destroy (bulletInstance3, 2);
+		shootSemaphore++;
 
 	}
 	GameObject enemy;

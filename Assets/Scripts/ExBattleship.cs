@@ -40,7 +40,7 @@ public class ExBattleship : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (mainGun1 == null || mainGun2 == null || mainGun3 == null) {
 				GameObject[] objarr = GameObject.FindGameObjectsWithTag ("MainGun") as GameObject[];
 	
@@ -63,19 +63,22 @@ public class ExBattleship : MonoBehaviour {
 			exMainGun2.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun2.transform.eulerAngles.z, 0f);
 			exMainGun3.transform.rotation = UnityEngine.Quaternion.Euler(0f, -mainGun3.transform.eulerAngles.z, 0f);
 
-			if(gunStation1.fsm_state == GunStation.FSM_State.Firing)
+			if(gunStation1.shootSemaphore > 0)
 			{
+				gunStation1.shootSemaphore --;
 				explosionEffect1.Burst();
 				enemyBattleship.DoDamage(4);
 
 			}
-			if(gunStation2.fsm_state == GunStation.FSM_State.Firing)
+			if(gunStation2.shootSemaphore > 0)
 			{
+				gunStation2.shootSemaphore --;
 				explosionEffect2.Burst();
 				enemyBattleship.DoDamage(4);
 			}
-			if(gunStation3.fsm_state == GunStation.FSM_State.Firing)
+			if(gunStation3.shootSemaphore > 0)
 			{
+				gunStation3.shootSemaphore --;
 				explosionEffect3.Burst();
 				enemyBattleship.DoDamage(4);
 			}
