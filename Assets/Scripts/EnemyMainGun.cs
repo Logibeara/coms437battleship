@@ -8,6 +8,8 @@ public class EnemyMainGun : MonoBehaviour {
 	private FSM_State fsm_state;
 	private Battleship playerBattleship;
 	public ExBattleship exBattleship;
+	
+	public EnemyBattleship enemyBattleship;
 	private int gunCharge = 0;
 	private int gunFireThreshold = 0;
 	private int numWorkers = 2;
@@ -39,6 +41,7 @@ public class EnemyMainGun : MonoBehaviour {
 		AimingTowardsTarget,
 		Charging,
 		Firing,
+		ShipDead,
 	}
 	// Use this for initialization
 	void Start () {
@@ -46,12 +49,14 @@ public class EnemyMainGun : MonoBehaviour {
 		tempLocalRot = defaultOrientation;
 
 		effect = this.GetComponent<GunExplosionEffect> ();
+
 		gunFireThreshold = Random.Range (0, 3000);
 	}
 
 	void Awake()
 	{
 		playerBattleship = (GameObject.FindWithTag ("PlayerBattleship") as GameObject).GetComponent(typeof(Battleship)) as Battleship;
+		enemyBattleship = (GameObject.FindWithTag ("EnemyBattleship") as GameObject).GetComponent(typeof(EnemyBattleship)) as EnemyBattleship;
 	}
 	
 	// Update is called once per frame
@@ -66,6 +71,11 @@ public class EnemyMainGun : MonoBehaviour {
 		{
 			workTick --;
 			BehaviorFSMDoOne();
+		}
+
+		if (enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive) 
+		{
+			fsm_state = FSM_State.ShipDead;
 		}
 	}
 
@@ -151,6 +161,9 @@ public class EnemyMainGun : MonoBehaviour {
 			
 			gunCharge = 0;
 
+			break;
+		case(FSM_State.ShipDead):
+			//do nothing
 			break;
 			
 		}

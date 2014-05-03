@@ -111,10 +111,15 @@ public class GunStation : MonoBehaviour, Station {
 		if (enemy == null || battleship3d == null) {
 			enemy = GameObject.FindWithTag ("EnemyBattleship");
 			battleship3d = GameObject.FindWithTag ("Battleship3d");
+
 			return new Vector3(-10, 0, 0);
 
 		} else {
 			Vector3 pos = enemy.transform.position - battleship3d.transform.position;
+			if(enemy.GetComponent<EnemyBattleship>().fsm_state != EnemyBattleship.FSM_State.Alive)
+			{
+				enemyShipExists = false;
+			}
 			return 10 * new Vector2(pos.x, pos.z);
 		}
 
@@ -143,26 +148,34 @@ public class GunStation : MonoBehaviour, Station {
 			break;
 		case(FSM_State.AimingTowardsTarget):
 		case(FSM_State.Charging):
+
+
 			Vector3 enemyPosition = getNearestEnemy();
-
-			Quaternion rot = Quaternion.FromToRotation(currentOrientation * new Vector3(0,-1,0),  enemyPosition- this.transform.position) * currentOrientation;
-		
-			transform.localRotation = Quaternion.RotateTowards(currentOrientation,rot,degreesPerTick);// * defaultOrientation;
-
-			if(Quaternion.Angle( transform.localRotation , rot ) < 1.0)
+			if(enemyShipExists)
 			{
-				fsm_state = FSM_State.Charging;
-			}
-
-
-
-		
-			gunCharge ++;
-			if(gunCharge >= gunFireThreshold)
-			{
-				gunCharge = 0;
-				fsm_state = FSM_State.Firing;
+				Quaternion rot = Quaternion.FromToRotation(currentOrientation * new Vector3(0,-1,0),  enemyPosition- this.transform.position) * currentOrientation;
 			
+				transform.localRotation = Quaternion.RotateTowards(currentOrientation,rot,degreesPerTick);// * defaultOrientation;
+
+				if(Quaternion.Angle( transform.localRotation , rot ) < 1.0)
+				{
+					fsm_state = FSM_State.Charging;
+				}
+
+
+
+			
+				gunCharge ++;
+				if(gunCharge >= gunFireThreshold)
+				{
+					gunCharge = 0;
+					fsm_state = FSM_State.Firing;
+				
+				}
+			}else
+			{
+				
+				fsm_state = FSM_State.NoTargetAvailable;
 			}
 			
 			break;

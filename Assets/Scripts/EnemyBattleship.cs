@@ -6,7 +6,15 @@ public class EnemyBattleship : MonoBehaviour {
 	public double currentHealth;
 	// Use this for initialization
 	ShipExplosionEffect effect;
-
+	Animator animator;
+	
+	public FSM_State fsm_state;
+	public enum FSM_State
+	{
+		Alive,
+		Sinking,
+		Dead
+	}
 	void Start () {
 		//mainGun1 = GameObject.Find("EnemyBattleshipExMainGun1") as GameObject;
 		//mainGun2 = GameObject.Find("EnemyBattleshipExMainGun2") as GameObject;
@@ -14,23 +22,39 @@ public class EnemyBattleship : MonoBehaviour {
 		currentHealth = startingHealth;
 		
 		effect = this.GetComponent<ShipExplosionEffect> ();
+		fsm_state = FSM_State.Alive;
+		animator = this.GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		switch (fsm_state) 
+		{
+			case(FSM_State.Alive):
+				break;
+			case(FSM_State.Sinking):
+				animator.SetBool("Sinking",true);
+				break;
+			case(FSM_State.Dead):
+			break;
+
+		}
 	}
 
 	public void DoDamage(double amount)
 	{
-				currentHealth -= amount;
-				effect.SmallHit ();
-				if (currentHealth <= 0) {
-		
-						currentHealth = 0;
-						effect.KillExplosion ();
-				}
+		if (fsm_state == FSM_State.Alive) {
+			effect.SmallHit ();
+			currentHealth -= amount;
+			if (currentHealth <= 0) {
+	
+					currentHealth = 0;
+	
+					effect.KillExplosion ();
+					fsm_state = FSM_State.Sinking;
+			}
 		}
+	}
 	public double GetCurrentHealth()
 	{
 		return currentHealth;
