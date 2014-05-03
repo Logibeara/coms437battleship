@@ -21,9 +21,9 @@ public class ShipExplosionEffect : MonoBehaviour {
 		// Use this for initialization
 		void Start () {
 			string pname =  this.transform.parent.name;
-			hitPos1 = this.transform.FindChild("HitPos1");
-			hitPos2 = this.transform.FindChild("HitPos2");
-			hitPos3 = this.transform.FindChild("HitPos3");
+			hitPos1 = this.transform.FindChild("InnerTransform").FindChild("HitPos1");
+		hitPos2 = this.transform.FindChild("InnerTransform").FindChild("HitPos2");
+		hitPos3 = this.transform.FindChild("InnerTransform").FindChild("HitPos3");
 			
 			//partSys = Resources.Load ("particle/Explosion06");
 			gunExplosionSound = this.GetComponent<AudioSource> ();

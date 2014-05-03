@@ -26,9 +26,9 @@ public class ExBattleship : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//find all game objects htat have stations and add them to a list.
-		exMainGun1 = GameObject.Find("ExBattleshipExMainGun1") as GameObject;
-		exMainGun2 = GameObject.Find("ExBattleshipExMainGun2") as GameObject;
-		exMainGun3 = GameObject.Find("ExBattleshipExMainGun3") as GameObject;
+		exMainGun1 = GameObject.Find("InnerTransformExMainGun1") as GameObject;
+		exMainGun2 = GameObject.Find("InnerTransformExMainGun2") as GameObject;
+		exMainGun3 = GameObject.Find("InnerTransformExMainGun3") as GameObject;
 
 		explosionEffect1 = exMainGun1.GetComponent<GunExplosionEffect> ();
 		explosionEffect2 = exMainGun2.GetComponent<GunExplosionEffect> ();
