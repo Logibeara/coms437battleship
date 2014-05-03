@@ -9,9 +9,9 @@ public class EnemyMainGun : MonoBehaviour {
 	private Battleship playerBattleship;
 	public ExBattleship exBattleship;
 	private int gunCharge = 0;
-	private int gunFireThreshold = 2000;
+	private int gunFireThreshold = 0;
 	private int numWorkers = 2;
-	
+	private float hitPercentage = 0.10f;
 	private Quaternion defaultOrientation;
 	private int workTick = 0;
 	private Quaternion tempLocalRot;
@@ -46,6 +46,7 @@ public class EnemyMainGun : MonoBehaviour {
 		tempLocalRot = defaultOrientation;
 
 		effect = this.GetComponent<GunExplosionEffect> ();
+		gunFireThreshold = Random.Range (0, 3000);
 	}
 
 	void Awake()
@@ -73,12 +74,14 @@ public class EnemyMainGun : MonoBehaviour {
 	{
 		//hit center for now
 		if (playerBattleship != null) {
+			if(Random.Range(0.0f,1.0f) <= hitPercentage)
+			{
 				playerBattleship.ProjectileHit (
-		new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
-
+				new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
+				exBattleship.DoDamage();
+			}
 			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
-			exBattleship.DoDamage();
 		} else {
 			playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
 
