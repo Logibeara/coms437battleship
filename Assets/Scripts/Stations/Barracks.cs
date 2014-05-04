@@ -17,7 +17,13 @@ public class Barracks : MonoBehaviour, Station {
 
 	public bool doWork(CrewMember worker)
 	{
-		//todo
+		worker.Tiredness -= (int)(Random.value * 10);
+
+		if(worker.Tiredness <= 0)
+		{
+			worker.ResumeLastKnownJob();
+		}
+
 		return true;
 	}
 

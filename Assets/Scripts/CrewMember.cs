@@ -36,6 +36,7 @@ public class CrewMember : MonoBehaviour {
 
 	private CrewMemberStatus status;
 	private Station activeJob;
+	private Station lastKnownJob = null;
 	public GameObject barracks;
 	public Station barracksScript;
 
@@ -56,47 +57,64 @@ public class CrewMember : MonoBehaviour {
 
 	SpriteRenderer jobSpriteRenderer;
 
+	#region Public Accessors
+
+	public Vector3 Position
+	{
+		get { return transform.position; }
+		set { transform.position = value; }
+	}
+
 	public List<CrewMember> CrewList
 	{
 		get { return crewList; }
 		set { crewList = value; }
 	}
-	
-	/// <summary>
-	/// give this crew member a job
-	/// </summary>
-	/// <param name="station">Station.</param>
+
+	public int Tiredness
+	{
+		get { return tiredness; }
+		set { tiredness = value; }
+	}
+
+	public Station LastKnownJob
+	{
+		get { return lastKnownJob; }
+		set { lastKnownJob = value; }
+	}
+
+	#endregion
+
+	//Gives this crewmember a job
 	public void SetStation(Station station)
 	{
 		nullifyJob ();
-		if (activeJob != station) {
-			activeJob = station;
-			status = CrewMemberStatus.PERFORM_JOB;
+		activeJob = station;
+		status = CrewMemberStatus.PERFORM_JOB;
 
-			if(station is FireStation)
-			{
-				SetJobIcon ("firefighter");
-			}
-			else if(station is GunStation)
-			{
-				SetJobIcon("gunner");
-			}
-			else if (station is Barracks)
-			{
-				SetJobIcon("tired");
-			}
+		if(station is FireStation)
+		{
+			SetJobIcon ("firefighter");
+		}
+		else if(station is GunStation)
+		{
+			SetJobIcon("gunner");
+		}
+		else if (station is Barracks)
+		{
+			SetJobIcon("tired");
+		}
 //			else if(station is MedicStation)
 //			{
 //				SetJobIcon("medic");
 //			}
-		}
+
+		target = station.getTarget (this);
+
+		path = null;
+		seeker.StartPath (transform.position, new Vector3(target.x, target.y, 0), OnPathComplete);
+		pathRequested = true;
 	}
-//	public Vector2 Position
-//	{ 
-//		get { return new Vector2 (transform.position.x, transform.position.y); }
-//		set { transform.position = new Vector3(value.x, value.y, 0); }
-//	}
-	public Vector3 Position { get { return transform.position; } set { transform.position = value; } }
 
 	// Use this for initialization
 	void Start () {
@@ -169,7 +187,7 @@ public class CrewMember : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		//do dammage and see if they are dead
+		//do damage and see if they are dead
 		health -= (float)damage * Time.deltaTime;
 		if(health <= 0)
 		{
@@ -200,8 +218,10 @@ public class CrewMember : MonoBehaviour {
 			}
 			if(Random.value * 1000000 + 1000 <= tiredness)
 			{
-				status = CrewMemberStatus.TIRED;
-				//tired = 0;
+				SetJobIcon("tired");
+				lastKnownJob = activeJob;
+				activeJob = FindObjectOfType(typeof(Barracks)) as Barracks;
+				status = CrewMemberStatus.PERFORM_JOB;
 			}
 
 			break;
@@ -230,11 +250,14 @@ public class CrewMember : MonoBehaviour {
 			}
 			if(Random.value * 100000 + 1000 <= tiredness)
 			{
-				status = CrewMemberStatus.TIRED;
-				//tired = 0;
+				SetJobIcon("tired");
+				lastKnownJob = activeJob;
+				activeJob = FindObjectOfType(typeof(Barracks)) as Barracks;
+				status = CrewMemberStatus.PERFORM_JOB;
 			}
 			break;
 
+		//DEPRECATED CASE
 		case CrewMemberStatus.TIRED:
 			SetJobIcon("tired");
 			targetPos = barracksScript.getTarget(this);
@@ -280,11 +303,6 @@ public class CrewMember : MonoBehaviour {
 			rigidbody2D.angularVelocity = -.01f;
 		}
 
-//		//After updating the force, perform wall avoidance
-//		//Physics2D.Raycast(
-//		Debug.DrawRay (rigidbody2D.transform.position + rigidbody2D.transform.up, aggregateForce.normalized);
-//
-//
 //		//Apply linear force and torque
 		rigidbody2D.AddForce(aggregateForce);
 		if(aggregateForce.magnitude > .01)
@@ -298,7 +316,17 @@ public class CrewMember : MonoBehaviour {
 		PathUpdate();
 	}
 
-	public void doDammage()
+	public void ResumeLastKnownJob()
+	{
+		if(lastKnownJob != null)
+		{
+			SetStation(lastKnownJob);
+			//status = CrewMemberStatus.PERFORM_JOB;
+			//activeJob = lastKnownJob;
+		}
+	}
+
+	public void doDamage()
 	{
 		if(!beingDamaged &&(activeJob == null || !activeJob.GetType().Equals(typeof(FireStation))))
 		{

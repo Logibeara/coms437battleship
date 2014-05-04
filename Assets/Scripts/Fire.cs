@@ -80,7 +80,7 @@ public class Fire : MonoBehaviour {
 		CrewMember crewMember = other.GetComponent (typeof(CrewMember)) as CrewMember;
 		if(crewMember != null)
 		{
-			crewMember.doDammage();
+			crewMember.doDamage();
 		}
 	}
 
