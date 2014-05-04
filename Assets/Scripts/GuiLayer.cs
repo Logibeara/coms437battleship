@@ -113,6 +113,11 @@ public class GuiLayer : MonoBehaviour {
 		} else {
 			progress = (float)(healthPerShip * shipsDestroyed ) / (totalShips * healthPerShip);
 		}
+
+		if (progress > .999f) 
+		{
+			Application.LoadLevel(2);
+		}
 		if (enemyBattleship != null)
 		{
 			healthPerShip = (float)enemyBattleship.startingHealth;
@@ -120,7 +125,7 @@ public class GuiLayer : MonoBehaviour {
 			{
 				if(time == 0.0f)
 				{
-					notification = "Enemy Ship has been defeated!";
+					notification = "Enemy Battleship Defeated!";
 					fightingEnemyShip = false;
 					time = Time.time;
 					shipsDestroyed ++;
