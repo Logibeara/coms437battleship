@@ -7,7 +7,6 @@ public interface Station
 
 	Vector2 getTarget(CrewMember crewIn);
 
-	bool doDamage(int damageDone);
 	/// <summary>
 	/// return true of work was done	/// </summary>
 	/// <returns>The work.</returns>

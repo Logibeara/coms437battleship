@@ -77,19 +77,7 @@ public class FireStation : MonoBehaviour, Station {
 			crewMember.SetStation(this);
 		}
 	}
-	
-	public bool doDamage(int dammageDone)
-	{
-		health -= dammageDone;
-		if (health >= 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+
 	/// <summary>
 	/// return true of work was done	/// </summary>
 	/// <returns>The work.</returns>

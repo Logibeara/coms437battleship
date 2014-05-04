@@ -37,19 +37,6 @@ public class Barracks : MonoBehaviour, Station {
 			health = value;
 		}
 	}
-	
-	public bool doDamage(int dammageDone)
-	{
-		health -= dammageDone;
-		if (health >= 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
 
 	public void doWork()
 	{
