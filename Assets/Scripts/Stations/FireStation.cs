@@ -95,8 +95,9 @@ public class FireStation : MonoBehaviour, Station {
 	/// return true of work was done	/// </summary>
 	/// <returns>The work.</returns>
 	/// <param name="position">Position.</param>
-	public bool doWork(Vector2 position) //does work based on posistion if possible
+	public bool doWork(CrewMember worker) //does work based on posistion if possible
 	{
+		Vector3 position = worker.transform.position;
 		//TODO check if near a fire
 		//if so work++
 		bool ret = false;

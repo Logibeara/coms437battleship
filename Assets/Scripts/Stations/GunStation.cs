@@ -189,8 +189,9 @@ public class GunStation : MonoBehaviour, Station {
 	}
 
 
-	public bool doWork(Vector2 position)
+	public bool doWork(CrewMember worker)
 	{
+		Vector2 position = new Vector2(worker.transform.position.x, worker.transform.position.y);
 		//only do work if the position is within one unit of this gun
 		if((new Vector2(this.transform.position.x, this.transform.position.y) - position).magnitude < 1)
 		{

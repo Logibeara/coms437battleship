@@ -15,12 +15,12 @@ public class CrewMember : MonoBehaviour {
 	private float wanderCircleRadius = 1f;
 	private float wanderAngle;
 	private float velocityMax = 1f;
-	private int tired;
+	private int tiredness;
 	public float maxHealth = 10;
 	public float health;
 
-	private int dammage = 0;
-	private bool beingDammaged = false;
+	private int  damage       = 0;
+	private bool beingDamaged = false;
 
 	List<CrewMember> crewList;
 
@@ -32,14 +32,12 @@ public class CrewMember : MonoBehaviour {
 	//  -The proximity to the nearest finger currently in contact with the screen (if any)
 	//  -The direction of the next waypoint towards the major target, as selected by a pathfinding algorithm
 	//  -The force applied by any Station whose sphere of influence this crew member currently occupies
-	private Vector2 intermediateTarget;
+	//private Vector2 intermediateTarget;
 
 	private CrewMemberStatus status;
 	private Station activeJob;
 	public GameObject barracks;
 	public Station barracksScript;
-
-
 
 	//The calculated path
 	public Path path;
@@ -83,6 +81,10 @@ public class CrewMember : MonoBehaviour {
 			{
 				SetJobIcon("gunner");
 			}
+			else if (station is Barracks)
+			{
+				SetJobIcon("tired");
+			}
 //			else if(station is MedicStation)
 //			{
 //				SetJobIcon("medic");
@@ -103,7 +105,7 @@ public class CrewMember : MonoBehaviour {
 
 		status = CrewMemberStatus.IDLE_WANDER;
 		wanderAngle = Random.value * 360;
-		tired = 0;
+		tiredness = 0;
 		barracksScript = barracks.GetComponent (typeof(Station)) as Station;
 
 		//target = barracksScript.getTarget (this);
@@ -168,7 +170,7 @@ public class CrewMember : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//do dammage and see if they are dead
-		health -= (float)dammage * Time.deltaTime;
+		health -= (float)damage * Time.deltaTime;
 		if(health <= 0)
 		{
 			die();
@@ -177,32 +179,11 @@ public class CrewMember : MonoBehaviour {
 		{
 			health = maxHealth;
 		}
-		dammage = 0;
-		beingDammaged = false;
-//		if(Input.GetMouseButtonDown(0))
-//		{
-//			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-//			
-//			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
-//			
-//			float distance;
-//			
-//			print ("fire");
-//			if (xyPlane.Raycast (ray, out distance)) {
-//				print ("hit");
-//				Vector3 hitPoint = ray.GetPoint(distance);
-//				target = new Vector2(hitPoint.x, hitPoint.y);
-//				
-//				seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
-//				pathRequested = true;
-//			}
-//		}
-				Vector2 targetPos; //temp variable
-		//
-				//float aggregateTorque = 0;
-				Vector2 aggregateForce = Vector2.zero;
-//
-//		//Update the intermediate target
+		damage = 0;
+		beingDamaged = false;
+		Vector2 targetPos; //temp variable
+		Vector2 aggregateForce = Vector2.zero;
+
 		switch(status)
 		{
 		case CrewMemberStatus.IDLE_WANDER:
@@ -217,7 +198,7 @@ public class CrewMember : MonoBehaviour {
 
 				ApplyTowardsTarget(targetPos, ref aggregateForce);
 			}
-			if(Random.value * 1000000 + 1000 <= tired)
+			if(Random.value * 1000000 + 1000 <= tiredness)
 			{
 				status = CrewMemberStatus.TIRED;
 				//tired = 0;
@@ -234,7 +215,7 @@ public class CrewMember : MonoBehaviour {
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
-				activeJob.doWork(this.Position);
+				activeJob.doWork(this);
 			}
 			else
 			{
@@ -247,7 +228,7 @@ public class CrewMember : MonoBehaviour {
 				}
 				rigidbody2D.angularVelocity = 0;
 			}
-			if(Random.value * 100000 + 1000 <= tired)
+			if(Random.value * 100000 + 1000 <= tiredness)
 			{
 				status = CrewMemberStatus.TIRED;
 				//tired = 0;
@@ -264,7 +245,7 @@ public class CrewMember : MonoBehaviour {
 				//Stop animation
 				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
 
-				tired -= (int)(Random.value * 10);
+				tiredness -= (int)(Random.value * 10);
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
 			}
@@ -278,16 +259,11 @@ public class CrewMember : MonoBehaviour {
 					pathRequested = true;
 				}
 			}
-			if(tired <= 0)
+			if(tiredness <= 0)
 			{
 				status = CrewMemberStatus.PERFORM_JOB;
 				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = true;
 			}
-//			if(Random.value * 1000 <= tired)
-//			{
-//				status = CrewMemberStatus.PERFORM_JOB;
-//				tired = 0;
-//			}
 			break;
 		}
 
@@ -317,23 +293,23 @@ public class CrewMember : MonoBehaviour {
 			rigidbody2D.AddTorque((cross.z < 0) ? .005f : -.005f);
 		}
 //
-		tired++;
+		tiredness++;
 
 		PathUpdate();
 	}
 
 	public void doDammage()
 	{
-		if(!beingDammaged &&(activeJob == null || !activeJob.GetType().Equals(typeof(FireStation))))
+		if(!beingDamaged &&(activeJob == null || !activeJob.GetType().Equals(typeof(FireStation))))
 		{
-			beingDammaged = true;
-			dammage++;
+			beingDamaged = true;
+			damage++;
 		}
 	}
 
 	public void heal()
 	{
-		dammage -= 2;
+		damage -= 2;
 	}
 
 	public void nullifyJob()

@@ -15,7 +15,7 @@ public class Barracks : MonoBehaviour, Station {
 		
 	}
 
-	public bool doWork(Vector2 pos)
+	public bool doWork(CrewMember worker)
 	{
 		//todo
 		return true;
