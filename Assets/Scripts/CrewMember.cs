@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
 
-enum CrewMemberStatus
+public enum CrewMemberStatus
 {
 	IDLE_WANDER,
 	TIRED,
-	PERFORM_JOB
+	PERFORM_JOB,
+	INCAPACITATED
 }
 
 public class CrewMember : MonoBehaviour {
@@ -18,7 +19,7 @@ public class CrewMember : MonoBehaviour {
 	#endregion
 
 	#region Public Constants
-	public float healthMax = 10;
+	public float healthMax = 2;
 	#endregion
 
 	#region Private Variables
@@ -64,6 +65,16 @@ public class CrewMember : MonoBehaviour {
 	SpriteRenderer jobSpriteRenderer;
 
 	#region Public Accessors
+
+	public CrewMemberStatus Status
+	{
+		get { return status; }
+	}
+
+	public float Health
+	{
+		get { return healthCurrent;}
+	}
 
 	public Vector3 Position
 	{
@@ -171,10 +182,18 @@ public class CrewMember : MonoBehaviour {
 		healthCurrent -= (float)accumulatedDamage * Time.deltaTime;
 		if(healthCurrent <= 0)
 		{
-			die();
+			if(status != CrewMemberStatus.INCAPACITATED)
+			{
+				incap();
+			}
+			healthCurrent = 0;
 		}
 		if(healthCurrent > healthMax)
 		{
+			if(status == CrewMemberStatus.INCAPACITATED)
+			{
+				revive();
+			}
 			healthCurrent = healthMax;
 		}
 		accumulatedDamage = 0;
@@ -184,6 +203,10 @@ public class CrewMember : MonoBehaviour {
 
 		switch(status)
 		{
+		case CrewMemberStatus.INCAPACITATED:
+
+			break;
+
 		case CrewMemberStatus.IDLE_WANDER:
 			if(rigidbody2D.velocity.magnitude <= VELOCITY_MAX)
 			{
@@ -336,17 +359,24 @@ public class CrewMember : MonoBehaviour {
 		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;
 	}
 
-	void die()
+	void incap()
 	{
-		if(masterCrewList != null)
-		{
-			masterCrewList.Remove (this);
-			Destroy(this.gameObject);
-		}
-		else
-		{
-			throw new System.ArgumentNullException("crewList is null!!!!");
-		}
+		//TODO change animation state to incapped
+		(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
+
+		status = CrewMemberStatus.INCAPACITATED;
+		healthCurrent = 0;
+	}
+
+	void revive()
+	{
+		//TODO chanve animation state to walking
+		(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = true;
+
+		SetJobIcon("tired");
+		lastKnownJob = currentJob;
+		currentJob = barracks;
+		status = CrewMemberStatus.PERFORM_JOB;
 	}
 
 	//Gives this crewmember a job
