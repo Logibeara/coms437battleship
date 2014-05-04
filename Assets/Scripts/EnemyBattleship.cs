@@ -16,6 +16,16 @@ public class EnemyBattleship : MonoBehaviour {
 		Sinking,
 		Dead
 	}
+
+	public float xOffset
+	{
+		set
+		{
+			Vector3 pos = this.transform.parent.transform.localPosition;
+			pos.x = value;
+			this.transform.parent.localPosition = pos;
+		}
+	}
 	void Start () {
 		//mainGun1 = GameObject.Find("EnemyBattleshipExMainGun1") as GameObject;
 		//mainGun2 = GameObject.Find("EnemyBattleshipExMainGun2") as GameObject;
@@ -27,7 +37,8 @@ public class EnemyBattleship : MonoBehaviour {
 		effect = this.GetComponent<ShipExplosionEffect> ();
 		fsm_state = FSM_State.Alive;
 		animator = this.GetComponent<Animator> ();
-
+		
+		xOffset = -2;
 	}
 	
 	// Update is called once per frame

@@ -33,7 +33,6 @@ public class GuiLayer : MonoBehaviour {
 		camera1 = camera1GameObject.GetComponent<Camera>();
 
 
-
 		//mainCamera.transform.position = scene1Position;
 		//mainCamera.transform.rotation = scene1Rotation;
 	}
@@ -121,9 +120,17 @@ public class GuiLayer : MonoBehaviour {
 				notification = "An Enemy Battleship has arrived!";
 				fightingEnemyShip = true;
 				enemyBattleship.ResetShip();
+				enemyBattleship.xOffset = nextOffset();
 				time = 0.0f;
 			}
 		}
 
+	}
+
+	float nextOffset()
+	{
+		float[] offsets = new float[]{-2f,-1.5f,1.5f,2f};
+		int k = Random.Range (0, offsets.Length - 1);
+		return offsets[k];
 	}
 }
