@@ -227,19 +227,6 @@ public class GunStation : MonoBehaviour, Station {
 		}
 	}
 
-	public bool doDamage(int damageDone)
-	{
-		health -= damageDone;
-		if (health >= 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	public void doWork()
 	{
 		//TODO
