@@ -391,7 +391,6 @@ public class CrewMember : MonoBehaviour {
 		(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
 
 		status = CrewMemberStatus.INCAPACITATED;
-		healthCurrent = 0;
 	}
 
 	void revive()
