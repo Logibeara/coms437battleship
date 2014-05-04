@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 //using System.Collections.ArrayList;
 
 public class GunStation : MonoBehaviour, Station {
@@ -11,6 +12,10 @@ public class GunStation : MonoBehaviour, Station {
 	private Animator anim;					// Reference to the Animator component.
 	public int shootSemaphore = 0; //counter to synchronize shots with 3d representation
 
+	//queue for recycling bullet instances
+	private ExplosiveRound[] bulletQueue;
+	private int queueLength = 10;
+	private int queueIndex = 0;
 	// Use this for initialization
 	void Start () {
 
@@ -19,8 +24,30 @@ public class GunStation : MonoBehaviour, Station {
 		fsm_state = FSM_State.NoTargetAvailable;
 		crewList = new List<CrewMember> ();
 		defaultOrientation = transform.localRotation;
+
+		bulletQueue =new ExplosiveRound[queueLength];
+		Object bObj = Resources.Load ("Prefabs/ExplosiveRound");
+		for (int i = 0; i<queueLength; i++) 
+		{
+			
+			bulletQueue[i] = (Instantiate (bObj) as GameObject).GetComponent(typeof(ExplosiveRound)) as ExplosiveRound;
+		
+			//send off screen
+			bulletQueue[i].transform.position = new Vector3(100,100,100);
+		}
+
 	}
-	
+
+	ExplosiveRound getNextBullet()
+	{
+		ExplosiveRound ret =  bulletQueue [queueIndex];
+		queueIndex ++;
+		if (queueIndex >= queueLength) 
+		{
+			queueIndex = 0;
+		}
+		return ret;
+	}
 	// Update is called once per frame
 	void FixedUpdate () {
 	
@@ -53,18 +80,9 @@ public class GunStation : MonoBehaviour, Station {
 		anim.SetTrigger ("Shoot");
 
 
-		ExplosiveRound bulletInstance1 = (
-			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
-			typeof(ExplosiveRound)) as ExplosiveRound;
-		
-		ExplosiveRound bulletInstance2 = (
-			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
-			typeof(ExplosiveRound)) as ExplosiveRound;
-		
-		
-		ExplosiveRound bulletInstance3 = (
-			Instantiate (Resources.Load ("Prefabs/ExplosiveRound")) as GameObject).GetComponent(
-			typeof(ExplosiveRound)) as ExplosiveRound;
+		ExplosiveRound bulletInstance1 = getNextBullet ();
+		ExplosiveRound bulletInstance2 = getNextBullet ();
+		ExplosiveRound bulletInstance3 = getNextBullet ();
 
 		
 		Transform[] barrelPos = {
@@ -74,9 +92,9 @@ public class GunStation : MonoBehaviour, Station {
 
 
 
-		bulletInstance1.transform.rotation = barrelPos[0].transform.rotation* bulletInstance1.transform.rotation;
-		bulletInstance2.transform.rotation = barrelPos[1].transform.rotation* bulletInstance2.transform.rotation;
-		bulletInstance3.transform.rotation = barrelPos[2].transform.rotation* bulletInstance3.transform.rotation;
+		bulletInstance1.transform.rotation = barrelPos [0].transform.rotation;
+		bulletInstance2.transform.rotation = barrelPos[1].transform.rotation;
+		bulletInstance3.transform.rotation = barrelPos[2].transform.rotation;
 
 		
 		bulletInstance1.transform.position = barrelPos [0].position;
@@ -96,10 +114,6 @@ public class GunStation : MonoBehaviour, Station {
 
 		bulletInstance2.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y);
 		bulletInstance3.rigidbody2D.velocity = speed *  new Vector2(direction.x,direction.y );
- 
-		Destroy (bulletInstance1, 2);
-		Destroy (bulletInstance2, 2);
-		Destroy (bulletInstance3, 2);
 		shootSemaphore++;
 
 	}
@@ -160,18 +174,18 @@ public class GunStation : MonoBehaviour, Station {
 			{
 				Quaternion rot = Quaternion.FromToRotation(currentOrientation * new Vector3(0,-1,0),  enemyPosition- this.transform.position) * currentOrientation;
 			
-				transform.localRotation = Quaternion.RotateTowards(currentOrientation,rot,degreesPerTick);// * defaultOrientation;
-
-				if(Quaternion.Angle( transform.localRotation , rot ) < 1.0)
+	
+				if(Quaternion.Angle( transform.localRotation , rot ) < .05)
 				{
 					fsm_state = FSM_State.Charging;
 				}
 
+				transform.localRotation = Quaternion.RotateTowards(currentOrientation,rot,degreesPerTick);// * defaultOrientation;
 
 
 			
 				gunCharge ++;
-				if(gunCharge >= gunFireThreshold)
+				if(gunCharge >= gunFireThreshold && fsm_state == FSM_State.Charging)
 				{
 					gunCharge = 0;
 					fsm_state = FSM_State.Firing;
