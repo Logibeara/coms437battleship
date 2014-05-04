@@ -18,7 +18,7 @@ public class ExBattleship : MonoBehaviour {
 	private GunExplosionEffect explosionEffect1;
 	private GunExplosionEffect explosionEffect2;
 	private GunExplosionEffect explosionEffect3;
-
+	float hitPercentage  = .2f;
 	private SplashEffect splashEffect;
 
 
@@ -71,20 +71,44 @@ public class ExBattleship : MonoBehaviour {
 			{
 				gunStation1.shootSemaphore --;
 				explosionEffect1.Burst();
-				enemyBattleship.DoDamage(4);
+				if(Random.Range(0.0f,1.0f) <= hitPercentage)
+				{
+					enemyBattleship.DoDamage(4);
+				}
+				else
+				{
+					enemyBattleship.Miss();
+				}
 
 			}
 			if(gunStation2.shootSemaphore > 0)
 			{
+
 				gunStation2.shootSemaphore --;
 				explosionEffect2.Burst();
-				enemyBattleship.DoDamage(4);
+				if(Random.Range(0.0f,1.0f) <= hitPercentage)
+				{
+
+					enemyBattleship.DoDamage(4);
+				}
+				else
+				{
+					enemyBattleship.Miss();
+				}
 			}
 			if(gunStation3.shootSemaphore > 0)
 			{
 				gunStation3.shootSemaphore --;
 				explosionEffect3.Burst();
-				enemyBattleship.DoDamage(4);
+				if(Random.Range(0.0f,1.0f) <= hitPercentage)
+				{
+
+					enemyBattleship.DoDamage(4);
+				}
+				else
+				{
+					enemyBattleship.Miss();
+				}
 			}
 		}
 	}

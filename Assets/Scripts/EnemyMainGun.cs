@@ -4,7 +4,6 @@ using System.Collections;
 public class EnemyMainGun : MonoBehaviour {
 
 	private float degreesPerTick = 1;
-	private float shotsPerTick = 1;
 	private FSM_State fsm_state;
 	private Battleship playerBattleship;
 	public ExBattleship exBattleship;

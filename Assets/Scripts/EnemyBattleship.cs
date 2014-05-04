@@ -8,7 +8,9 @@ public class EnemyBattleship : MonoBehaviour {
 	ShipExplosionEffect effect;
 	Animator animator;
 	
+	private SplashEffect splashEffect;
 	public FSM_State fsm_state;
+	Transform[] splashLocations;
 	public enum FSM_State
 	{
 		Alive,
@@ -21,9 +23,17 @@ public class EnemyBattleship : MonoBehaviour {
 		//mainGun3 = GameObject.Find("EnemyBattleshipExMainGun3") as GameObject;
 		currentHealth = startingHealth;
 		
+		splashEffect = this.GetComponent<SplashEffect> ();
+
 		effect = this.GetComponent<ShipExplosionEffect> ();
 		fsm_state = FSM_State.Alive;
 		animator = this.GetComponent<Animator> ();
+
+		splashLocations = new Transform[5];
+		for (int i = 0; i < 5; i++) 
+		{
+			splashLocations[i] = this.transform.FindChild("InnerTransform").FindChild("SplashLocation"+i);
+		}
 	}
 	
 	// Update is called once per frame
@@ -54,6 +64,11 @@ public class EnemyBattleship : MonoBehaviour {
 					fsm_state = FSM_State.Sinking;
 			}
 		}
+	}
+
+	public void Miss()
+	{
+		splashEffect.MakeSplash ();
 	}
 	public double GetCurrentHealth()
 	{
