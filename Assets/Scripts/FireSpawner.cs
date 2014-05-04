@@ -11,7 +11,7 @@ public class FireSpawner : MonoBehaviour {
 	}
 	public Vector2 NextRanLoc ()
 	{
-		int k = Random.Range (0, fireLocs.Length);
+		int k = Random.Range (0, fireLocs.Length-1);
 		Vector2 loc = new Vector2 ();
 		loc.x = fireLocs [k].position.x;
 		loc.y = fireLocs [k].position.y;

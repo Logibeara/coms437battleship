@@ -97,16 +97,33 @@ public class GuiLayer : MonoBehaviour {
 
 	}
 	// Update is called once per frame
+	float time = 0.0f;
 	void Update () {
-		progress = Time.time * 0.05f;
+		progress = Time.time * 0.01f;
 
 		if (enemyBattleship != null)
 		{
 			if(enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive)
 			{
-				notification = "Enemy Ship has been defeated!";
-				fightingEnemyShip = false;
+				if(time == 0.0f)
+				{
+					notification = "Enemy Ship has been defeated!";
+					fightingEnemyShip = false;
+					time = Time.time;
+				}
 			}
 		}
+		if (time != 0.0f) 
+		{
+			if(time + 5< Time.time && enemyBattleship.fsm_state == EnemyBattleship.FSM_State.Dead)
+			{
+				//reset
+				notification = "An Enemy Battleship has arrived!";
+				fightingEnemyShip = true;
+				enemyBattleship.ResetShip();
+				time = 0.0f;
+			}
+		}
+
 	}
 }

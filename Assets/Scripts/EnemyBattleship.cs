@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EnemyBattleship : MonoBehaviour {
-	private double startingHealth = 500;
+	private double startingHealth = 100;
 	public double currentHealth;
 	// Use this for initialization
 	ShipExplosionEffect effect;
@@ -32,12 +32,18 @@ public class EnemyBattleship : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		switch (fsm_state) 
 		{
 			case(FSM_State.Alive):
 				break;
 			case(FSM_State.Sinking):
 				animator.SetBool("Sinking",true);
+				AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+				if (info.IsTag("dead"))
+				{
+					fsm_state = FSM_State.Dead;
+				}
 				break;
 			case(FSM_State.Dead):
 			break;
@@ -67,5 +73,15 @@ public class EnemyBattleship : MonoBehaviour {
 	public double GetCurrentHealth()
 	{
 		return currentHealth;
+	}
+	
+	public void ResetShip()
+	{
+		fsm_state = FSM_State.Alive;
+		currentHealth = startingHealth;
+		animator.SetTrigger ("Reset");
+		
+		animator.SetBool("Sinking",false);
+
 	}
 }

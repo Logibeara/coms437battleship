@@ -121,6 +121,10 @@ public class GunStation : MonoBehaviour, Station {
 			{
 				enemyShipExists = false;
 			}
+			else
+			{
+				enemyShipExists = true;
+			}
 			return 10 * new Vector2(pos.x, pos.z);
 		}
 
@@ -129,7 +133,7 @@ public class GunStation : MonoBehaviour, Station {
 	{
 		
 		Quaternion currentOrientation = transform.localRotation;
-
+		Vector3 enemyPosition = getNearestEnemy();
 		switch (fsm_state)
 		{
 		case(FSM_State.NoTargetAvailable):
@@ -151,7 +155,7 @@ public class GunStation : MonoBehaviour, Station {
 		case(FSM_State.Charging):
 
 
-			Vector3 enemyPosition = getNearestEnemy();
+
 			if(enemyShipExists)
 			{
 				Quaternion rot = Quaternion.FromToRotation(currentOrientation * new Vector3(0,-1,0),  enemyPosition- this.transform.position) * currentOrientation;

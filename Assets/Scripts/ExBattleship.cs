@@ -121,4 +121,5 @@ public class ExBattleship : MonoBehaviour {
 	{
 		splashEffect.MakeSplash ();
 	}
+
 }

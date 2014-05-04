@@ -72,9 +72,11 @@ public class EnemyMainGun : MonoBehaviour {
 			BehaviorFSMDoOne();
 		}
 
-		if (enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive) 
-		{
+		if (enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive) {
 			fsm_state = FSM_State.ShipDead;
+		} else if (fsm_state == FSM_State.ShipDead)
+		{
+			fsm_state = FSM_State.NoTargetAvailable;
 		}
 	}
 
