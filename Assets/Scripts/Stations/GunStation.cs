@@ -4,8 +4,6 @@ using System.Collections.Generic;
 //using System.Collections.ArrayList;
 
 public class GunStation : MonoBehaviour, Station {
-	private int health;
-	List<CrewMember> crewList;
 	private int workTick = 0;
 	private Quaternion defaultOrientation;
 	private Animator anim;					// Reference to the Animator component.
@@ -13,11 +11,8 @@ public class GunStation : MonoBehaviour, Station {
 
 	// Use this for initialization
 	void Start () {
-
-		health = 100;
 		anim = transform.root.gameObject.GetComponent<Animator> ();
 		fsm_state = FSM_State.NoTargetAvailable;
-		crewList = new List<CrewMember> ();
 		defaultOrientation = transform.localRotation;
 	}
 	
@@ -216,40 +211,9 @@ public class GunStation : MonoBehaviour, Station {
 			crewMember.SetStation(this);
 		}
 	}
-	public int Health{ 
-		get
-		{
-			return health;
-		}
-		set
-		{
-			health = value;
-		}
-	}
-
-	public void doWork()
-	{
-		//TODO
-		return;
-	}
 
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		return this.transform.position;
-	}
-
-	public void addCrew(CrewMember crewIn)
-	{
-		if (crewIn != null)
-		{
-			crewList.Add(crewIn);
-		}
-	}
-	public void removeCrew(CrewMember crewIn)
-	{
-		if(crewList.Contains(crewIn));
-		{
-			crewList.Remove(crewIn);
-		}
 	}
 }

@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class FireStation : MonoBehaviour, Station {
-	private int health;
-	List<CrewMember> crewList;
 	private int workTick;
 	List<Fire> fireList;
 	public Battleship battleShip;
@@ -12,8 +10,6 @@ public class FireStation : MonoBehaviour, Station {
 	// Use this for initialization
 	void Start ()
 	{
-		health = 100;
-		crewList = new List<CrewMember> ();
 		workTick = 0;
 	}
 	
@@ -28,17 +24,6 @@ public class FireStation : MonoBehaviour, Station {
 		fireList = fireListIn;
 	}
 
-	public int Health{ 
-		get
-		{
-			return health;
-		}
-		set
-		{
-			health = value;
-		}
-	}
-	
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		//TODO return location of closest fire when we have that information
@@ -97,21 +82,5 @@ public class FireStation : MonoBehaviour, Station {
 			}
 		}
 		return false;
-	}
-
-	public void addCrew(CrewMember crewIn)
-	{
-		if (crewIn != null)
-		{
-			crewList.Add(crewIn);
-		}
-	}
-
-	public void removeCrew(CrewMember crewIn)
-	{
-		if(crewList.Contains(crewIn));
-		{
-			crewList.Remove(crewIn);
-		}
 	}
 }

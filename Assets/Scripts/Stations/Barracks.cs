@@ -3,11 +3,9 @@ using System.Collections;
 
 public class Barracks : MonoBehaviour, Station {
 
-	private int health;
-	
 	// Use this for initialization
 	void Start () {
-		health = 100;
+
 	}
 	
 	// Update is called once per frame
@@ -27,17 +25,6 @@ public class Barracks : MonoBehaviour, Station {
 		return true;
 	}
 
-	public int Health{ 
-		get
-		{
-			return health;
-		}
-		set
-		{
-			health = value;
-		}
-	}
-
 	public void doWork()
 	{
 		return;
@@ -46,14 +33,5 @@ public class Barracks : MonoBehaviour, Station {
 	public Vector2 getTarget(CrewMember crewIn)
 	{
 		return this.transform.position;
-	}
-	
-	public void addCrew(CrewMember crewIn)
-	{
-		return;
-	}
-	public void removeCrew(CrewMember crewIn)
-	{
-		return;
 	}
 }
