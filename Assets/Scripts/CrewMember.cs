@@ -15,6 +15,7 @@ public class CrewMember : MonoBehaviour {
 	#region Private Constants
 	private const float VELOCITY_MAX         = 1f;
 	private const float WANDER_CIRCLE_RADIUS = 1.5f;
+	private const float NEXT_WAYPOINT_DISTANCE = .03f; //Max distance from the AI to a waypoint for it to continue to the next waypoint
 	#endregion
 
 	#region Public Constants
@@ -30,7 +31,7 @@ public class CrewMember : MonoBehaviour {
 	private int              accumulatedDamage  = 0;     //
 	private bool             beingDamaged       = false; // Mutex to ensure that if surrounded by many fires,
 	                                                        // only one fire can hurt crewmember
-	//
+
 	private List<CrewMember> masterCrewList;             //
 
 	//Job / goal
@@ -41,7 +42,8 @@ public class CrewMember : MonoBehaviour {
 	//Pathing
 	private Vector2          targetPosition;             // The position of the current major goal
 	private float            wanderCurrentAngle = 0;     //
-	private bool             pathRequested = false;      //
+	private bool             newPathDesired = false;     //
+	private Vector3          lastRequestedPathTarget;    //
 	#endregion
 
 	private Barracks barracks;
@@ -53,8 +55,7 @@ public class CrewMember : MonoBehaviour {
 	//The AI's speed per second
 	public float speed = 100;
 	
-	//The max distance from the AI to a waypoint for it to continue to the next waypoint
-	public float nextWaypointDistance = .1f;
+
 	
 	//The waypoint we are currently moving towards
 	private int currentWaypoint = 0;
@@ -127,12 +128,17 @@ public class CrewMember : MonoBehaviour {
 	public void OnPathComplete(Path p)
 	{
 		//Debug.Log ("Yey, we got a path back. Did it have an error? " + p.error);
-		if (!p.error) {
-				path = p;
-				//Reset the waypoint counter
-				currentWaypoint = 0;
+		if (!p.error)
+		{
+			path = p;
+				
+			//Manually add last waypoint
+			p.vectorPath.Add(lastRequestedPathTarget);
+
+			//Reset the waypoint counter
+			currentWaypoint = 0;
 		}
-		pathRequested = false;
+		//pathRequested = false; THIS SEEMS QUITE BAD
 	}
 
 	public void PathUpdate()
@@ -158,7 +164,8 @@ public class CrewMember : MonoBehaviour {
 			
 			//Check if we are close enough to the next waypoint
 			//If we are, proceed to follow the next waypoint
-			if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < nextWaypointDistance) {
+			if (Vector3.Distance (transform.position, path.vectorPath[currentWaypoint]) < NEXT_WAYPOINT_DISTANCE) {
+				//Debug.Log("Waypoint " + currentWaypoint + " reached!");
 				currentWaypoint++;
 				return;
 			}
@@ -179,7 +186,7 @@ public class CrewMember : MonoBehaviour {
 		}
 		accumulatedDamage = 0;
 		beingDamaged = false;
-		Vector2 targetPos; //temp variable
+		//Vector2 targetPosition; //temp variable
 		Vector2 aggregateForce = Vector2.zero;
 
 		switch(status)
@@ -192,9 +199,9 @@ public class CrewMember : MonoBehaviour {
 				Vector2 forwardVec = 4 * (new Vector2(transform.forward.x, transform.forward.y));
 				Vector2 circlePos = new Vector2(Position.x,  Position.y) + forwardVec;
 				wanderCurrentAngle += (Random.value * 30) - 15;
-				targetPos = circlePos + WANDER_CIRCLE_RADIUS * new Vector2(Mathf.Cos(wanderCurrentAngle * Mathf.Deg2Rad), Mathf.Sin(wanderCurrentAngle * Mathf.Deg2Rad));
+				targetPosition = circlePos + WANDER_CIRCLE_RADIUS * new Vector2(Mathf.Cos(wanderCurrentAngle * Mathf.Deg2Rad), Mathf.Sin(wanderCurrentAngle * Mathf.Deg2Rad));
 
-				ApplyTowardsTarget(targetPos, ref aggregateForce);
+				ApplyTowardsTarget(targetPosition, ref aggregateForce);
 			}
 			if(Random.value * 1000000 + 1000 <= tiredness)
 			{
@@ -207,11 +214,26 @@ public class CrewMember : MonoBehaviour {
 			break;
 //
 		case CrewMemberStatus.PERFORM_JOB:
-			if(currentJob == null)
+			//if(currentJob == null)
+			//{
+			//	status = CrewMemberStatus.IDLE_WANDER;
+			//}
+
+			Vector2 newestTarget = currentJob.getTarget(this);
+
+			if(Vector2.Distance(targetPosition, newestTarget) > .0001)
 			{
-				status = CrewMemberStatus.IDLE_WANDER;
+				//Request a new path, as the target has updated
+				ClearPath();
+				targetPosition = newestTarget;
 			}
-			else if(Vector2.Distance(rigidbody2D.transform.position, currentJob.getTarget(this)) < .5f)
+			else
+			{
+				//Just update the target
+				targetPosition = newestTarget;
+			}
+
+			if(Vector2.Distance(new Vector2(rigidbody2D.transform.position.x, rigidbody2D.transform.position.y), targetPosition) < .15f)
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
@@ -220,14 +242,18 @@ public class CrewMember : MonoBehaviour {
 			else
 			{
 				//ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
-				Vector2 t =  currentJob.getTarget(this);
-				if(path == null && pathRequested == false)
+				//targetPos = currentJob.getTarget(this);
+				if(newPathDesired == true && (!Input.GetMouseButton(0)))
 				{
-					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
-					pathRequested = true;
+					newPathDesired = false;
+					Vector3 toSeek = new Vector3(targetPosition.x, targetPosition.y, 0);
+
+					seeker.StartPath (transform.position, toSeek, OnPathComplete);
+					lastRequestedPathTarget = toSeek;
 				}
 				rigidbody2D.angularVelocity = 0;
 			}
+
 			if(Random.value * 100000 + 1000 <= tiredness)
 			{
 				SetJobIcon("tired");
@@ -241,10 +267,10 @@ public class CrewMember : MonoBehaviour {
 		//TODO extract animation logic
 		case CrewMemberStatus.TIRED:
 			SetJobIcon("tired");
-			targetPos = barracks.getTarget(this);
+			targetPosition = barracks.getTarget(this);
 
 			//If we're at the barracks
-			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .4f)
+			if(Vector2.Distance(rigidbody2D.transform.position, targetPosition) < .4f)
 			{
 				//Stop animation
 				(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
@@ -257,10 +283,10 @@ public class CrewMember : MonoBehaviour {
 			{
 				//Go to the barracks
 				Vector2 t =  barracks.getTarget(this);
-				if(path == null && pathRequested == false)
+				if(path == null && newPathDesired == false)
 				{
 					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
-					pathRequested = true;
+					newPathDesired = true;
 				}
 			}
 			if(tiredness <= 0)
@@ -349,34 +375,42 @@ public class CrewMember : MonoBehaviour {
 		}
 	}
 
+	//Removes the crewmember's current path and indicates that a new one is needed
+	public void ClearPath()
+	{
+		path = null;
+		newPathDesired = true;
+	}
+
 	//Gives this crewmember a job
 	public void SetStation(Station station)
 	{
-		nullifyJob ();
-		currentJob = station;
-		status = CrewMemberStatus.PERFORM_JOB;
-		
-		if(station is FireStation)
+		if(currentJob != station)
 		{
-			SetJobIcon ("firefighter");
+			nullifyJob ();
+			currentJob = station;
+			status = CrewMemberStatus.PERFORM_JOB;
+			
+			if(station is FireStation)
+			{
+				SetJobIcon ("firefighter");
+			}
+			else if(station is GunStation)
+			{
+				SetJobIcon("gunner");
+			}
+			else if (station is Barracks)
+			{
+				SetJobIcon("tired");
+			}
+			//			else if(station is MedicStation)
+			//			{
+			//				SetJobIcon("medic");
+			//			}
+			
+			targetPosition = station.getTarget (this);
+
+			ClearPath ();
 		}
-		else if(station is GunStation)
-		{
-			SetJobIcon("gunner");
-		}
-		else if (station is Barracks)
-		{
-			SetJobIcon("tired");
-		}
-		//			else if(station is MedicStation)
-		//			{
-		//				SetJobIcon("medic");
-		//			}
-		
-		targetPosition = station.getTarget (this);
-		
-		path = null;
-		seeker.StartPath (transform.position, new Vector3(targetPosition.x, targetPosition.y, 0), OnPathComplete);
-		pathRequested = true;
 	}
 }

@@ -91,8 +91,8 @@ public class TouchLayer : MonoBehaviour {
 						}
 						rb.AddForce(force * deltaPos.normalized);
 
-						//Reset this crew member's job
-						//(crewMember.gameObject.GetComponent(typeof(CrewMember)) as CrewMember).nullifyJob();
+						//Reset this crew member's path
+						(crewMember.gameObject.GetComponent(typeof(CrewMember)) as CrewMember).ClearPath();
 					}
 				}
 			}

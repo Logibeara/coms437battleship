@@ -81,6 +81,7 @@ public class FireStation : MonoBehaviour, Station {
 				return true;
 			}
 		}
+		Debug.Log("ERROR: Did work on fire from far away"); 
 		return false;
 	}
 }
