@@ -10,7 +10,6 @@ public class EnemyBattleship : MonoBehaviour {
 	
 	private SplashEffect splashEffect;
 	public FSM_State fsm_state;
-	Transform[] splashLocations;
 	public enum FSM_State
 	{
 		Alive,
@@ -29,11 +28,6 @@ public class EnemyBattleship : MonoBehaviour {
 		fsm_state = FSM_State.Alive;
 		animator = this.GetComponent<Animator> ();
 
-		splashLocations = new Transform[5];
-		for (int i = 0; i < 5; i++) 
-		{
-			splashLocations[i] = this.transform.FindChild("InnerTransform").FindChild("SplashLocation"+i);
-		}
 	}
 	
 	// Update is called once per frame

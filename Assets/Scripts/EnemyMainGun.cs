@@ -85,8 +85,9 @@ public class EnemyMainGun : MonoBehaviour {
 		if (playerBattleship != null) {
 			if(Random.Range(0.0f,1.0f) <= hitPercentage)
 			{
-				playerBattleship.ProjectileHit (
-				new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
+				//playerBattleship.ProjectileHit (
+				//new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
+				playerBattleship.ProjectileHit();
 				exBattleship.DoDamage();
 			}
 			else

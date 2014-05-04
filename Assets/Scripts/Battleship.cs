@@ -9,17 +9,35 @@ public class Battleship : MonoBehaviour {
 	private int numCrewMembers = 10;
 	private List<Station> stations;
 	private List<Fire> fires;
+	private FireSpawner fireSpawner;
 
 	public List<Fire> Fires {get { return fires; }}
-
 	public void ProjectileHit(Vector2 location)
+	{
+		Fire newFire = (Instantiate (Resources.Load ("Prefabs/Fire")) as GameObject)
+			.GetComponent (typeof(Fire)) as Fire;
+		
+		newFire.FireList = fires;
+		
+
+		Vector3 pos = new Vector3 ();
+		pos.x = location.x;
+		pos.y = location.y;
+		pos.z = 0;
+		newFire.transform.position = pos;
+		
+		fires.Add (newFire);
+	}
+	public void ProjectileHit()
 	{
 		Fire newFire = (Instantiate (Resources.Load ("Prefabs/Fire")) as GameObject)
 			.GetComponent (typeof(Fire)) as Fire;
 
 		newFire.FireList = fires;
 
-		Vector3 pos = newFire.transform.position;
+		Vector3 location = fireSpawner.NextRanLoc ();
+
+		Vector3 pos = new Vector3 ();
 		pos.x = location.x;
 		pos.y = location.y;
 		pos.z = 0;
@@ -62,6 +80,7 @@ public class Battleship : MonoBehaviour {
 			}
 		}
 		Debug.Log (stations.Count().ToString());
+		fireSpawner = this.transform.FindChild("FireSpawner").GetComponent<FireSpawner>();
 	}
 
 
