@@ -19,6 +19,8 @@ public class ExBattleship : MonoBehaviour {
 	private GunExplosionEffect explosionEffect2;
 	private GunExplosionEffect explosionEffect3;
 
+	private SplashEffect splashEffect;
+
 
 	private EnemyBattleship enemyBattleship;
 	
@@ -33,6 +35,8 @@ public class ExBattleship : MonoBehaviour {
 		explosionEffect1 = exMainGun1.GetComponent<GunExplosionEffect> ();
 		explosionEffect2 = exMainGun2.GetComponent<GunExplosionEffect> ();
 		explosionEffect3 = exMainGun3.GetComponent<GunExplosionEffect> ();
+
+		splashEffect = this.GetComponent<SplashEffect> ();
 		
 		enemyBattleship = (GameObject.FindGameObjectWithTag ("EnemyBattleship") as GameObject).GetComponent<EnemyBattleship> ();
 		
@@ -88,5 +92,9 @@ public class ExBattleship : MonoBehaviour {
 	public void DoDamage()
 	{
 		effect.SmallHit ();
+	}
+	public void Miss()
+	{
+		splashEffect.MakeSplash ();
 	}
 }

@@ -90,6 +90,10 @@ public class EnemyMainGun : MonoBehaviour {
 				new Vector2 (playerBattleship.transform.position.x-2.5f, playerBattleship.transform.position.y-2.5f));
 				exBattleship.DoDamage();
 			}
+			else
+			{
+				exBattleship.Miss();
+			}
 			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
 		} else {
