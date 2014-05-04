@@ -12,37 +12,43 @@ enum CrewMemberStatus
 
 public class CrewMember : MonoBehaviour {
 
-	private float wanderCircleRadius = 1f;
-	private float wanderAngle;
-	private float velocityMax = 1f;
-	private int tiredness;
-	public float maxHealth = 10;
-	public float health;
+	#region Private Constants
+	private const float VELOCITY_MAX         = 1f;
+	private const float WANDER_CIRCLE_RADIUS = 1.5f;
+	#endregion
 
-	private int  damage       = 0;
-	private bool beingDamaged = false;
+	#region Public Constants
+	public float healthMax = 10;
+	#endregion
 
-	List<CrewMember> crewList;
+	#region Private Variables
 
-	//The current major goal position of the crew member (usually defined
-	// by the CrewMemberStatus and the active job)
-	private Vector2 target;
+	private int              tiredness          = 0;     //
 
-	//The current short-term target of the crew member. Factors (ordered from highest to lowest precedence):
-	//  -The proximity to the nearest finger currently in contact with the screen (if any)
-	//  -The direction of the next waypoint towards the major target, as selected by a pathfinding algorithm
-	//  -The force applied by any Station whose sphere of influence this crew member currently occupies
-	//private Vector2 intermediateTarget;
+	//Health
+	private float            healthCurrent      = 0;     //
+	private int              accumulatedDamage  = 0;     //
+	private bool             beingDamaged       = false; // Mutex to ensure that if surrounded by many fires,
+	                                                        // only one fire can hurt crewmember
+	//
+	private List<CrewMember> masterCrewList;             //
 
-	private CrewMemberStatus status;
-	private Station activeJob;
-	private Station lastKnownJob = null;
-	public GameObject barracks;
-	public Station barracksScript;
+	//Job / goal
+	private Station          currentJob;                 //
+	private Station          lastKnownJob;               //
+	private CrewMemberStatus status;                     //
+
+	//Pathing
+	private Vector2          targetPosition;             // The position of the current major goal
+	private float            wanderCurrentAngle = 0;     //
+	private bool             pathRequested = false;      //
+	#endregion
+
+	private Barracks barracks;
 
 	//The calculated path
 	public Path path;
-	public bool pathRequested = false;
+
 	
 	//The AI's speed per second
 	public float speed = 100;
@@ -67,8 +73,8 @@ public class CrewMember : MonoBehaviour {
 
 	public List<CrewMember> CrewList
 	{
-		get { return crewList; }
-		set { crewList = value; }
+		get { return masterCrewList; }
+		set { masterCrewList = value; }
 	}
 
 	public int Tiredness
@@ -85,52 +91,26 @@ public class CrewMember : MonoBehaviour {
 
 	#endregion
 
-	//Gives this crewmember a job
-	public void SetStation(Station station)
-	{
-		nullifyJob ();
-		activeJob = station;
-		status = CrewMemberStatus.PERFORM_JOB;
 
-		if(station is FireStation)
-		{
-			SetJobIcon ("firefighter");
-		}
-		else if(station is GunStation)
-		{
-			SetJobIcon("gunner");
-		}
-		else if (station is Barracks)
-		{
-			SetJobIcon("tired");
-		}
-//			else if(station is MedicStation)
-//			{
-//				SetJobIcon("medic");
-//			}
-
-		target = station.getTarget (this);
-
-		path = null;
-		seeker.StartPath (transform.position, new Vector3(target.x, target.y, 0), OnPathComplete);
-		pathRequested = true;
-	}
 
 	// Use this for initialization
 	void Start () {
+
+		//Local variable init
+		barracks = FindObjectOfType(typeof(Barracks)) as Barracks;
+
 		jobSpriteRenderer = gameObject.GetComponentInChildren(typeof(SpriteRenderer)) as SpriteRenderer;
 		SetJobIcon (null);
 
 		status = CrewMemberStatus.IDLE_WANDER;
-		wanderAngle = Random.value * 360;
+		wanderCurrentAngle = Random.value * 360;
 		tiredness = 0;
-		barracksScript = barracks.GetComponent (typeof(Station)) as Station;
-
+		//barracks = oldbarracksthing.GetComponent (typeof(Station)) as Station;
 		//target = barracksScript.getTarget (this);
 
 		seeker = GetComponent<Seeker> ();
 		//seeker.StartPath (transform.position, new Vector3(target.x, target.y,0), OnPathComplete);
-		health = maxHealth;
+		healthCurrent = healthMax;
 
 	}
 
@@ -188,16 +168,16 @@ public class CrewMember : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//do damage and see if they are dead
-		health -= (float)damage * Time.deltaTime;
-		if(health <= 0)
+		healthCurrent -= (float)accumulatedDamage * Time.deltaTime;
+		if(healthCurrent <= 0)
 		{
 			die();
 		}
-		if(health > maxHealth)
+		if(healthCurrent > healthMax)
 		{
-			health = maxHealth;
+			healthCurrent = healthMax;
 		}
-		damage = 0;
+		accumulatedDamage = 0;
 		beingDamaged = false;
 		Vector2 targetPos; //temp variable
 		Vector2 aggregateForce = Vector2.zero;
@@ -205,42 +185,42 @@ public class CrewMember : MonoBehaviour {
 		switch(status)
 		{
 		case CrewMemberStatus.IDLE_WANDER:
-			if(rigidbody2D.velocity.magnitude <= velocityMax)
+			if(rigidbody2D.velocity.magnitude <= VELOCITY_MAX)
 			{
 
 				//Generate wander target to follow
 				Vector2 forwardVec = 4 * (new Vector2(transform.forward.x, transform.forward.y));
 				Vector2 circlePos = new Vector2(Position.x,  Position.y) + forwardVec;
-				wanderAngle += (Random.value * 30) - 15;
-				targetPos = circlePos + 0.05f * new Vector2(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), Mathf.Sin(wanderAngle * Mathf.Deg2Rad));
+				wanderCurrentAngle += (Random.value * 30) - 15;
+				targetPos = circlePos + WANDER_CIRCLE_RADIUS * new Vector2(Mathf.Cos(wanderCurrentAngle * Mathf.Deg2Rad), Mathf.Sin(wanderCurrentAngle * Mathf.Deg2Rad));
 
 				ApplyTowardsTarget(targetPos, ref aggregateForce);
 			}
 			if(Random.value * 1000000 + 1000 <= tiredness)
 			{
 				SetJobIcon("tired");
-				lastKnownJob = activeJob;
-				activeJob = FindObjectOfType(typeof(Barracks)) as Barracks;
+				lastKnownJob = currentJob;
+				currentJob = barracks;
 				status = CrewMemberStatus.PERFORM_JOB;
 			}
 
 			break;
 //
 		case CrewMemberStatus.PERFORM_JOB:
-			if(activeJob == null)
+			if(currentJob == null)
 			{
 				status = CrewMemberStatus.IDLE_WANDER;
 			}
-			else if(Vector2.Distance(rigidbody2D.transform.position, activeJob.getTarget(this)) < .5f)
+			else if(Vector2.Distance(rigidbody2D.transform.position, currentJob.getTarget(this)) < .5f)
 			{
 				rigidbody2D.velocity = Vector2.zero;
 				rigidbody2D.angularVelocity = 0;
-				activeJob.doWork(this);
+				currentJob.doWork(this);
 			}
 			else
 			{
 				//ApplyTowardsTarget(activeJob.getTarget(this), ref aggregateForce);
-				Vector2 t =  activeJob.getTarget(this);
+				Vector2 t =  currentJob.getTarget(this);
 				if(path == null && pathRequested == false)
 				{
 					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
@@ -251,16 +231,17 @@ public class CrewMember : MonoBehaviour {
 			if(Random.value * 100000 + 1000 <= tiredness)
 			{
 				SetJobIcon("tired");
-				lastKnownJob = activeJob;
-				activeJob = FindObjectOfType(typeof(Barracks)) as Barracks;
+				lastKnownJob = currentJob;
+				currentJob = barracks;
 				status = CrewMemberStatus.PERFORM_JOB;
 			}
 			break;
 
 		//DEPRECATED CASE
+		//TODO extract animation logic
 		case CrewMemberStatus.TIRED:
 			SetJobIcon("tired");
-			targetPos = barracksScript.getTarget(this);
+			targetPos = barracks.getTarget(this);
 
 			//If we're at the barracks
 			if(Vector2.Distance(rigidbody2D.transform.position, targetPos) < .4f)
@@ -275,7 +256,7 @@ public class CrewMember : MonoBehaviour {
 			else
 			{
 				//Go to the barracks
-				Vector2 t =  barracksScript.getTarget(this);
+				Vector2 t =  barracks.getTarget(this);
 				if(path == null && pathRequested == false)
 				{
 					seeker.StartPath (transform.position, new Vector3(t.x, t.y, 0), OnPathComplete);
@@ -290,9 +271,9 @@ public class CrewMember : MonoBehaviour {
 			break;
 		}
 
-		if(rigidbody2D.velocity.magnitude > velocityMax)
+		if(rigidbody2D.velocity.magnitude > VELOCITY_MAX)
 		{
-			rigidbody2D.velocity = rigidbody2D.velocity.normalized *  velocityMax;
+			rigidbody2D.velocity = rigidbody2D.velocity.normalized *  VELOCITY_MAX;
 		}
 		if(rigidbody2D.angularVelocity > .01f)
 		{
@@ -311,7 +292,7 @@ public class CrewMember : MonoBehaviour {
 			rigidbody2D.AddTorque((cross.z < 0) ? .005f : -.005f);
 		}
 //
-		tiredness++;
+		//tiredness++;
 
 		PathUpdate();
 	}
@@ -321,29 +302,32 @@ public class CrewMember : MonoBehaviour {
 		if(lastKnownJob != null)
 		{
 			SetStation(lastKnownJob);
-			//status = CrewMemberStatus.PERFORM_JOB;
-			//activeJob = lastKnownJob;
+		}
+		else
+		{
+			status = CrewMemberStatus.IDLE_WANDER;
+			SetJobIcon(null);
 		}
 	}
 
 	public void doDamage()
 	{
-		if(!beingDamaged &&(activeJob == null || !activeJob.GetType().Equals(typeof(FireStation))))
+		if(!beingDamaged &&(currentJob == null || !currentJob.GetType().Equals(typeof(FireStation))))
 		{
 			beingDamaged = true;
-			damage++;
+			accumulatedDamage++;
 		}
 	}
 
 	public void heal()
 	{
-		damage -= 2;
+		accumulatedDamage -= 2;
 	}
 
 	public void nullifyJob()
 	{
 		status = CrewMemberStatus.IDLE_WANDER;
-		activeJob = null;
+		currentJob = null;
 		path = null;
 	}
 
@@ -354,14 +338,45 @@ public class CrewMember : MonoBehaviour {
 
 	void die()
 	{
-		if(crewList != null)
+		if(masterCrewList != null)
 		{
-			crewList.Remove (this);
+			masterCrewList.Remove (this);
 			Destroy(this.gameObject);
 		}
 		else
 		{
 			throw new System.ArgumentNullException("crewList is null!!!!");
 		}
+	}
+
+	//Gives this crewmember a job
+	public void SetStation(Station station)
+	{
+		nullifyJob ();
+		currentJob = station;
+		status = CrewMemberStatus.PERFORM_JOB;
+		
+		if(station is FireStation)
+		{
+			SetJobIcon ("firefighter");
+		}
+		else if(station is GunStation)
+		{
+			SetJobIcon("gunner");
+		}
+		else if (station is Barracks)
+		{
+			SetJobIcon("tired");
+		}
+		//			else if(station is MedicStation)
+		//			{
+		//				SetJobIcon("medic");
+		//			}
+		
+		targetPosition = station.getTarget (this);
+		
+		path = null;
+		seeker.StartPath (transform.position, new Vector3(targetPosition.x, targetPosition.y, 0), OnPathComplete);
+		pathRequested = true;
 	}
 }

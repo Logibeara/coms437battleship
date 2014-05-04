@@ -199,9 +199,9 @@ public class GunStation : MonoBehaviour, Station {
 		//only do work if the position is within one unit of this gun
 		if((new Vector2(this.transform.position.x, this.transform.position.y) - position).magnitude < 1)
 		{
+			worker.Tiredness++;
 			workTick ++;
 			return true;
-
 		}
 
 		return false;

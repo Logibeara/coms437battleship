@@ -15,7 +15,6 @@ public class FireStation : MonoBehaviour, Station {
 		health = 100;
 		crewList = new List<CrewMember> ();
 		workTick = 0;
-
 	}
 	
 	// Update is called once per frame
@@ -100,17 +99,16 @@ public class FireStation : MonoBehaviour, Station {
 		Vector3 position = worker.transform.position;
 		//TODO check if near a fire
 		//if so work++
-		bool ret = false;
 		foreach(Fire fire in fireList)
 		{
 			if(Vector2.Distance(fire.transform.position, position) < 0.6f && Vector2.Distance(fire.transform.position, position) > -0.6f)
 			{
 				fire.fightFire();
-				ret = true;
-				break;
+				worker.Tiredness++;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public void addCrew(CrewMember crewIn)
