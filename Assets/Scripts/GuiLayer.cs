@@ -16,11 +16,15 @@ public class GuiLayer : MonoBehaviour {
 
 	//Progress bar data
 	float progress = 0;
-	Vector2 pos  = new Vector2(Screen.width * (1f-1f/32), 0f);
-	Vector2 size = new Vector2(Screen.width * 1f/32, Screen.height);
 	public Texture2D progressBarEmpty;
 	public Texture2D progressBarFull;
 	bool fightingEnemyShip = true;
+
+	//level parameters
+	int totalShips = 3;
+	int shipsDestroyed = 0;
+	float healthPerShip = 100;
+
 
 	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
@@ -72,6 +76,7 @@ public class GuiLayer : MonoBehaviour {
 
 		}
 		//display notifcations and  in bottom left corner
+
 		if (fightingEnemyShip) {
 
 				GUI.Box (
@@ -91,6 +96,9 @@ public class GuiLayer : MonoBehaviour {
 
 
 		//progress bar
+		
+		Vector2 pos  = new Vector2(Screen.width * (1f-1f/32), 0f);
+		Vector2 size = new Vector2(Screen.width * 1f/32, Screen.height);
 		GUI.DrawTexture(new Rect(pos.x, pos.y, size.x, size.y), progressBarEmpty);
 		GUI.DrawTexture(new Rect(pos.x, size.y*(1-Mathf.Clamp01(progress)), size.x , size.y*Mathf.Clamp01(progress)), progressBarFull);
 
@@ -98,17 +106,29 @@ public class GuiLayer : MonoBehaviour {
 	// Update is called once per frame
 	float time = 0.0f;
 	void Update () {
-		progress = Time.time * 0.01f;
+		//progress = (max health *(ships destroyed) + damage to current ship) / (total ships * max health)
 
+		if (fightingEnemyShip) {
+			progress = (float)(healthPerShip * shipsDestroyed + enemyBattleship.startingHealth - enemyBattleship.currentHealth) / (totalShips * healthPerShip);
+		} else {
+			progress = (float)(healthPerShip * shipsDestroyed ) / (totalShips * healthPerShip);
+		}
+
+		if (progress > .999f) 
+		{
+			Application.LoadLevel(2);
+		}
 		if (enemyBattleship != null)
 		{
+			healthPerShip = (float)enemyBattleship.startingHealth;
 			if(enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive)
 			{
 				if(time == 0.0f)
 				{
-					notification = "Enemy Ship has been defeated!";
+					notification = "Enemy Battleship Defeated!";
 					fightingEnemyShip = false;
 					time = Time.time;
+					shipsDestroyed ++;
 				}
 			}
 		}
