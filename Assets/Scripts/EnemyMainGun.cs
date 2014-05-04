@@ -93,7 +93,6 @@ public class EnemyMainGun : MonoBehaviour {
 			{
 				exBattleship.Miss();
 			}
-			fsm_state = FSM_State.AimingTowardsTarget;
 			effect.Burst();
 		} else {
 			playerBattleship = (GameObject.FindGameObjectWithTag ("PlayerBattleship") as GameObject).GetComponent<Battleship> ();
@@ -163,7 +162,8 @@ public class EnemyMainGun : MonoBehaviour {
 			fire();
 			
 			gunCharge = 0;
-
+			
+			fsm_state = FSM_State.AimingTowardsTarget;
 			break;
 		case(FSM_State.ShipDead):
 			//do nothing

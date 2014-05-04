@@ -18,7 +18,7 @@ public class ExBattleship : MonoBehaviour {
 	private GunExplosionEffect explosionEffect1;
 	private GunExplosionEffect explosionEffect2;
 	private GunExplosionEffect explosionEffect3;
-	float hitPercentage  = .2f;
+	float hitPercentage  = .5f;
 	private SplashEffect splashEffect;
 
 
