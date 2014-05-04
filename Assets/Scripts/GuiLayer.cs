@@ -20,6 +20,12 @@ public class GuiLayer : MonoBehaviour {
 	public Texture2D progressBarFull;
 	bool fightingEnemyShip = true;
 
+	//level parameters
+	int totalShips = 3;
+	int shipsDestroyed = 0;
+	float healthPerShip = 100;
+
+
 	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
 	void Start () {
@@ -100,10 +106,16 @@ public class GuiLayer : MonoBehaviour {
 	// Update is called once per frame
 	float time = 0.0f;
 	void Update () {
-		progress = Time.time * 0.01f;
+		//progress = (max health *(ships destroyed) + damage to current ship) / (total ships * max health)
 
+		if (fightingEnemyShip) {
+			progress = (float)(healthPerShip * shipsDestroyed + enemyBattleship.startingHealth - enemyBattleship.currentHealth) / (totalShips * healthPerShip);
+		} else {
+			progress = (float)(healthPerShip * shipsDestroyed ) / (totalShips * healthPerShip);
+		}
 		if (enemyBattleship != null)
 		{
+			healthPerShip = (float)enemyBattleship.startingHealth;
 			if(enemyBattleship.fsm_state != EnemyBattleship.FSM_State.Alive)
 			{
 				if(time == 0.0f)
@@ -111,6 +123,7 @@ public class GuiLayer : MonoBehaviour {
 					notification = "Enemy Ship has been defeated!";
 					fightingEnemyShip = false;
 					time = Time.time;
+					shipsDestroyed ++;
 				}
 			}
 		}

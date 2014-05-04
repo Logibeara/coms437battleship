@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EnemyBattleship : MonoBehaviour {
-	private double startingHealth = 100;
+	public double startingHealth = 100;
 	public double currentHealth;
 	// Use this for initialization
 	ShipExplosionEffect effect;
