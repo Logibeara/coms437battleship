@@ -10,7 +10,7 @@ public class EnemyMainGun : MonoBehaviour {
 	
 	public EnemyBattleship enemyBattleship;
 	private int gunCharge = 0;
-	private int gunFireThreshold = 0;
+	private int gunFireThreshold = 1500;
 	private int numWorkers = 2;
 	private float hitPercentage = 0.10f;
 	private Quaternion defaultOrientation;
@@ -49,7 +49,7 @@ public class EnemyMainGun : MonoBehaviour {
 
 		effect = this.GetComponent<GunExplosionEffect> ();
 
-		gunFireThreshold = Random.Range (0, 3000);
+		gunCharge = Random.Range (0, gunFireThreshold);
 	}
 
 	void Awake()
