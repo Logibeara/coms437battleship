@@ -11,6 +11,7 @@ public class Battleship : MonoBehaviour {
 	private List<Fire> fires;
 	private FireSpawner fireSpawner;
 
+	public List<CrewMember> Crew {get { return crewMembers; }}
 	public List<Fire> Fires {get { return fires; }}
 	public void ProjectileHit(Vector2 location)
 	{
