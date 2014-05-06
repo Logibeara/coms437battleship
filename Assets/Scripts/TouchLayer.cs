@@ -30,20 +30,21 @@ public class TouchLayer : MonoBehaviour {
 //				scrollPosition.y += touch.deltaPosition.y;
 //			}
 //		}
-		if(Input.GetMouseButtonDown(1)) //Right click
-		{
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			
-			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
-			
-			float distance;
-			if (xyPlane.Raycast (ray, out distance)) {
-				Vector3 hitPoint = ray.GetPoint(distance);
-				
-				//Add fire
-				battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
-			}
-		}
+
+//		if(Input.GetMouseButtonDown(1)) //Right click
+//		{
+//			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+//			
+//			Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
+//			
+//			float distance;
+//			if (xyPlane.Raycast (ray, out distance)) {
+//				Vector3 hitPoint = ray.GetPoint(distance);
+//				
+//				//Add fire
+//				battleship.ProjectileHit(new Vector2(hitPoint.x, hitPoint.y));
+//			}
+//		}
 
 		if(Input.GetMouseButton(0)) //Left click
 		{

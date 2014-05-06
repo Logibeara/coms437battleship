@@ -6,13 +6,12 @@ public class GuiLayer : MonoBehaviour {
 	private Camera camera1;
 	private Camera camera2;
 
-	int cameraState = 1;
+	private int cameraState = 1;
 	Vector3 scene1Position;
 	Quaternion scene1Rotation;
 	Vector3 scene2Position;
 	Quaternion scene2Rotation;
 	EnemyBattleship enemyBattleship;
-
 
 	//Progress bar data
 	float progress = 0;
@@ -24,6 +23,12 @@ public class GuiLayer : MonoBehaviour {
 	int totalShips = 3;
 	int shipsDestroyed = 0;
 	float healthPerShip = 100;
+
+	public int CameraState
+	{
+		get { return cameraState; }
+		set { cameraState = value; }
+	}
 
 
 	public string notification = "An Enemy Battleship has arrived!";
