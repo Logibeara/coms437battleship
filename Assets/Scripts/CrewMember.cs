@@ -432,10 +432,10 @@ public class CrewMember : MonoBehaviour {
 			{
 				SetJobIcon("tired");
 			}
-			//			else if(station is MedicStation)
-			//			{
-			//				SetJobIcon("medic");
-			//			}
+			else if(station is MedicStation)
+			{
+				SetJobIcon("medic");
+			}
 			
 			targetPosition = station.getTarget (this);
 
