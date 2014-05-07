@@ -191,7 +191,7 @@ public class CrewMember : MonoBehaviour {
 		{
 			if(status != CrewMemberStatus.INCAPACITATED)
 			{
-				incap();
+				//incap();
 			}
 			healthCurrent = 0;
 		}
@@ -385,13 +385,13 @@ public class CrewMember : MonoBehaviour {
 		force += new Vector2 (target.x - Position.x, target.y - Position.y).normalized;
 	}
 
-	void incap()
-	{
-		//TODO change animation state to incapped
-		(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
-
-		status = CrewMemberStatus.INCAPACITATED;
-	}
+//	void incap()
+//	{
+//		//TODO change animation state to incapped
+//		(gameObject.GetComponent(typeof(Animator)) as Animator).enabled = false;
+//
+//		status = CrewMemberStatus.INCAPACITATED;
+//	}
 
 	void revive()
 	{
