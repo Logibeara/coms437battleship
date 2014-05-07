@@ -277,7 +277,7 @@ public class CrewMember : MonoBehaviour {
 				rigidbody2D.angularVelocity = 0;
 			}
 
-			if(Random.value * 100000 + 1000 <= tiredness)
+			if(Random.value * 100000 + 1000 <= tiredness && currentJob != barracks)
 			{
 				SetJobIcon("tired");
 				lastKnownJob = currentJob;

@@ -1778,7 +1778,6 @@ GameObject:
   - 4: {fileID: 1187961096}
   - 212: {fileID: 1187961095}
   - 60: {fileID: 1187961094}
-  - 114: {fileID: 1187961097}
   - 61: {fileID: 1187961098}
   m_Layer: 0
   m_Name: logistics_5
@@ -1857,18 +1856,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!114 &1187961097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1187961093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 471ae380fcf13204499f27a83b8ee0e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  battleShip: {fileID: 1889689992}
 --- !u!61 &1187961098
 BoxCollider2D:
   m_ObjectHideFlags: 0
