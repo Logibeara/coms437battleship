@@ -10,6 +10,7 @@ TagManager:
   - EnemyBattleship
   - Battleship3d
   - GuiLayer
+  - CinematicCamera
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

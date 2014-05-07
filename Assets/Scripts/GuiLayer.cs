@@ -5,8 +5,9 @@ public class GuiLayer : MonoBehaviour {
 
 	private Camera camera1;
 	private Camera camera2;
+	private Camera camera3;
 
-	private int cameraState = 1;
+	private int cameraState = 3;
 	Vector3 scene1Position;
 	Quaternion scene1Rotation;
 	Vector3 scene2Position;
@@ -24,20 +25,12 @@ public class GuiLayer : MonoBehaviour {
 	int shipsDestroyed = 0;
 	float healthPerShip = 100;
 
-	public int CameraState
-	{
-		get { return cameraState; }
-		set { cameraState = value; }
-	}
-
-
 	public string notification = "An Enemy Battleship has arrived!";
 	// Use this for initialization
 	void Start () {
 		Application.LoadLevelAdditive(1);
 		
 		GameObject camera1GameObject = GameObject.FindGameObjectsWithTag ("MainCamera")[0];
-
 
 		camera1 = camera1GameObject.GetComponent<Camera>();
 
@@ -57,22 +50,31 @@ public class GuiLayer : MonoBehaviour {
 		GUIStyle style = new GUIStyle ();
 
 		if(GUI.Button(new Rect(0,0,Screen.width/8,Screen.height/8), "<size=" + Screen.width/30 + "> Alt\nView</size>")) {
-			//move camera to other scene view
-			if (camera2 == null) 
-			{
-				GameObject camera2GameObject = GameObject.FindGameObjectsWithTag ("Scene2Camera") [0];
-				camera2 = camera2GameObject.GetComponent<Camera> ();
-			}
-			if(cameraState == 0)
+
+			if(cameraState == 1)
 			{
 				camera2.enabled = true;
+
+				camera3.enabled = false;
 				camera1.enabled = false;
-				cameraState = 1;
-			}else{
-				
+				cameraState = 2;
+			}
+			else if (cameraState == 2)
+			{
+				camera3.enabled = true;
+	
+				camera1.enabled = false;
 				camera2.enabled = false;
+
+				cameraState = 3;
+			}
+			else //cameraState == 3
+			{
 				camera1.enabled = true;
-				cameraState = 0;
+
+				camera2.enabled = false;
+				camera3.enabled = false;
+				cameraState = 1;
 			}
 		}
 
@@ -111,6 +113,23 @@ public class GuiLayer : MonoBehaviour {
 	// Update is called once per frame
 	float time = 0.0f;
 	void Update () {
+		//move camera to other scene view
+		if (camera2 == null) 
+		{
+			GameObject camera2GameObject = GameObject.FindGameObjectsWithTag ("Scene2Camera") [0];
+			camera2 = camera2GameObject.GetComponent<Camera> ();
+		}
+		if(camera3 == null)
+		{
+			GameObject camera3GameObject = GameObject.FindGameObjectWithTag ("CinematicCamera");
+			camera3 = camera3GameObject.GetComponent<Camera>();
+			if(camera3 != null)
+			{
+				camera2.enabled = false;
+				camera1.enabled = true;
+			}
+		}
+
 		//progress = (max health *(ships destroyed) + damage to current ship) / (total ships * max health)
 
 		if (fightingEnemyShip) {
