@@ -9,10 +9,10 @@ public class EnemyMainGun : MonoBehaviour {
 	public ExBattleship exBattleship;
 	
 	public EnemyBattleship enemyBattleship;
-	private int gunCharge = 0;
+	private float gunCharge = 0;
 	private int gunFireThreshold = 1500;
 	private int numWorkers = 2;
-	private float hitPercentage = 0.10f;
+	private float hitPercentage = 0.20f; //0.10f;
 	private Quaternion defaultOrientation;
 	private int workTick = 0;
 	private Quaternion tempLocalRot;
@@ -152,7 +152,7 @@ public class EnemyMainGun : MonoBehaviour {
 				fsm_state = FSM_State.Charging;
 			}
 			
-			gunCharge ++;
+			gunCharge += Time.deltaTime * 60;
 			if(gunCharge >= gunFireThreshold)
 			{
 				fsm_state =  FSM_State.Firing;
