@@ -14,7 +14,7 @@ public class ExtCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(guiLayer.CameraState == 2)
+		if(camera.enabled)
 		{
 			if(Input.touchCount == 1) //Pan camera
 			{
